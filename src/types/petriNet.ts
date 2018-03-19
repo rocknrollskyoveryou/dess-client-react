@@ -1,10 +1,16 @@
 export interface IPosition {
   id: number;
   mark: number;
+  label: string;
+  x: number;
+  y: number;
 }
 
 export interface ITransition {
   id: number;
+  label: string;
+  x: number;
+  y: number;
 }
 
 export interface IArc {

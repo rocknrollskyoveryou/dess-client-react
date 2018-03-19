@@ -10,9 +10,10 @@
     "moduleResolution": "node",
     "rootDir": "src",
     "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules",

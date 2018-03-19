@@ -13,13 +13,16 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
+    "@types/d3": "^5.0.0",
     "@types/history": "^4.6.2",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
     "@types/react-redux": "^5.0.15",
     "@types/react-router-dom": "^4.2.5",
     "@types/react-router-redux": "^5.0.0",
+    "@types/recompose": "^0.24.6",
     "@types/redux-logger": "^3.0.5",
+    "d3": "^4.13.0",
     "history": "^4.7.2",
     "material-ui": "^1.0.0-beta.37",
     "react": "^16.2.0",
@@ -28,6 +31,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
+    "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6"
   },

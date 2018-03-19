@@ -9,10 +9,10 @@ import CssBaseline from 'material-ui/CssBaseline';
 import Router from './Router';
 
 const App = () => (
-  <div>
-    <CssBaseline />
-    <Router />
-  </div>
+    <div>
+        <CssBaseline />
+        <Router />
+    </div>
 );
 
 export default App;
