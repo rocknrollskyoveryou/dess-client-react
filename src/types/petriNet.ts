@@ -1,21 +1,26 @@
 export interface IPosition {
-  id: number;
+  id: string;
   mark: number;
   label: string;
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 export interface ITransition {
-  id: number;
+  id: string;
   label: string;
   x: number;
   y: number;
+  width: number;
+  height: number;
+  priority: number;
 }
 
 export interface IArc {
-  position: IPosition;
-  transition: ITransition;
+  source: string;
+  target: string;
 }
 
 export interface IPetriObject {

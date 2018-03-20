@@ -58,12 +58,32 @@ export default class Positions extends React.Component<{nodes: IPosition[]}, {}>
             .call(d3.drag()
             .on('drag', onDrag));
 
+        function onMouseEnter() {
+            d3.select(this)
+                .transition()
+                    .duration(150)
+                    .attr('transform', function(d: any) {
+                        return 'translate(' + d.x + ',' + d.y + ')scale(1.1)';
+                    });
+                
+        }
+
+        function onMouseLeave() {
+            d3.select(this)
+                .transition()
+                    .duration(150)
+                    .attr('transform', function(d: any) {
+                        return 'translate(' + d.x + ',' + d.y + ')scale(1)';
+                    });
+        }
+
         function onDrag() {
-            d3.select(this).attr('transform', function(d: any) {
-                d.x += d3.event.dx;
-                d.y += d3.event.dy;
-                return 'translate(' + d.x + ',' + d.y + ')';
-            });
+            d3.select(this)
+                .attr('transform', function(d: any) {
+                    d.x += d3.event.dx;
+                    d.y += d3.event.dy;
+                    return 'translate(' + d.x + ',' + d.y + ')';
+                });
         }
     }
   

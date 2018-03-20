@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 // Types
-import { IPetriObject, IPosition, ITransition } from '../types/petriNet';
+import { IPetriObject, IPosition, ITransition, IArc } from '../types/petriNet';
 import { IClasses } from '../types';
 
 // Material-ui components
@@ -21,21 +21,46 @@ import { IAddPosition, IAddTransition } from '../actions';
 
 const positions: IPosition[] = [
     {
-        id: 1,
+        id: 'position-1',
         mark: 1,
-        label: 'There are two major issues',
+        label: 'Position 1',
         x: 100,
-        y: 100,
+        y: 200,
+        width: 72,
+        height: 72,
     },
 ];
 
 const transitions: ITransition[] = [
     {
-        id: 1,
+        id: 'transition-1',
         label: 'Transition 1',
-        x: 200,
-        y: 200,
+        x: 400,
+        y: 300,
+        width: 18,
+        height: 72,
+        priority: 1,
     },
+    {
+        id: 'transition-2',
+        label: 'Transition 2',
+        x: 400,
+        y: 100,
+        width: 18,
+        height: 72,
+        priority: 2,
+    },
+];
+
+const arcs: IArc[] = [
+    {
+        source: 'position-1',
+        target: 'transition-1',
+    },
+    {
+        source: 'position-1',
+        target: 'transition-2',
+    }
 ];
 
 export interface IProps {
@@ -70,7 +95,7 @@ const PObjectDesigner: React.StatelessComponent<IProps> = (props) => {
             <DesignerView>
                 <Positions nodes={positions} />
                 <Transitions nodes={transitions} />
-                <Arcs />
+                <Arcs nodes={arcs} positions={positions} transitions={transitions} />
             </DesignerView>    
         </main>
     </div>

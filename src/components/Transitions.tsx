@@ -5,24 +5,24 @@ import { ITransition } from '../types/petriNet';
 class Transition extends React.Component<{ node: ITransition }, {}> {
     ref: SVGGElement;
 
-    componentDidMount() {
+    public componentDidMount(): void {
         d3.select(this.ref).data([this.props.node]);
     }
 
-    render() {
-        const { id, label, x, y } = this.props.node;
+    public render(): JSX.Element {
+        const { id, label, x, y, width, height, priority } = this.props.node;
 
         return (
             <g
                 className="transition"
-                transform={`translate(${x}, ${y})`}
+                transform={`translate(${x - width / 2}, ${y - height / 2})`}
                 ref={(ref: SVGGElement) => this.ref = ref}
             >
                 <rect
                     rx="3"
                     ry="3"
-                    width={18}
-                    height={72}
+                    width={width}
+                    height={height}
                     fill="#fff"
                     stroke="#757575"
                     strokeWidth="2"
@@ -44,7 +44,7 @@ class Transition extends React.Component<{ node: ITransition }, {}> {
     }
 }
 
-export default class Transitions extends React.Component<{nodes: ITransition[]}, {}> {
+export default class Transitions extends React.Component<{nodes: ITransition[], (d: ITransition): void}, {}> {
   
     public componentDidMount(): void {
         
@@ -59,12 +59,10 @@ export default class Transitions extends React.Component<{nodes: ITransition[]},
             d.fy = d.y;
         }
 
-        function onDrag() {
-            d3.select(this).attr('transform', function(d: any) {
-                d.x += d3.event.dx;
-                d.y += d3.event.dy;
-                return 'translate(' + d.x + ',' + d.y + ')';
-            });
+        function onDrag(d: ITransition) {
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            this.props.onDrag(d);
         }
 
         function onDragEnd(d: any) {
