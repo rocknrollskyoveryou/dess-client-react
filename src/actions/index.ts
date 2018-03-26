@@ -1,10 +1,10 @@
 import * as constants from '../constants';
-import { IPosition, ITransition } from '../types/petriNet';
+import { IPlace, ITransition } from '../types/petriNet';
 import transitions from 'material-ui/styles/transitions';
 
-export interface IAddPosition {
-    type: constants.ADD_POSITION;
-    position: IPosition;
+export interface IAddPlace {
+    type: constants.ADD_PLACE;
+    place: IPlace;
 }
 
 export interface IAddTransition {
@@ -12,12 +12,12 @@ export interface IAddTransition {
     transition: ITransition;
 }
 
-export type IPObjectAction = IAddPosition | IAddTransition;
+export type IPObjectAction = IAddPlace | IAddTransition;
 
-export function addPosition(position: IPosition): IAddPosition {
+export function addPlace(place: IPlace): IAddPlace {
     return {
-        type: constants.ADD_POSITION,
-        position,
+        type: constants.ADD_PLACE,
+        place,
     };
 }
 

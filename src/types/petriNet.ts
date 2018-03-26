@@ -1,4 +1,4 @@
-export interface IPosition {
+export interface IPlace {
   id: string;
   mark: number;
   label: string;
@@ -24,7 +24,7 @@ export interface IArc {
 }
 
 export interface IPetriObject {
-  positions?: Array<IPosition>;
+  positions?: Array<IPlace>;
   transitions?: Array<ITransition>;
   incomingArcs?: Array<IArc>;
   outgoingArcs?: Array<IArc>;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as d3 from 'd3';
-import { IArc, IPosition, ITransition } from '../types/petriNet';
+import { IArc, IPlace, ITransition } from '../types/petriNet';
 
 interface ID3Arc {
-    source: IPosition;
+    source: IPlace;
     target: ITransition;
 }
 
@@ -15,11 +15,11 @@ class Arc extends React.Component<ID3Arc, {}> {
         .y(function(d: any) { return d[1]; });
 
     public componentDidMount(): void {
-        this.updatePosition(this.props);
+        this.updatePlace(this.props);
     }
 
     public componentWillReceiveProps(nextProps: ID3Arc): void {
-        this.updatePosition(nextProps);
+        this.updatePlace(nextProps);
     }
   
     public render(): JSX.Element {
@@ -36,7 +36,7 @@ class Arc extends React.Component<ID3Arc, {}> {
         );
     }
 
-    private updatePosition(pos: ID3Arc): void {
+    private updatePlace(pos: ID3Arc): void {
         const { source, target } = this.props;
 
         let x0: number = source.x, x1: number = target.x;
@@ -62,14 +62,14 @@ class Arc extends React.Component<ID3Arc, {}> {
 
 interface IProps {
     nodes: IArc[];
-    positions: IPosition[];
+    places: IPlace[];
     transitions: ITransition[];
 }
 
 export default class Arcs extends React.Component<IProps, {}> {
     public render(): JSX.Element {
         const arcs: Array<JSX.Element | null> = this.props.nodes.map((arc: IArc, index: number) => {
-            const source = this.props.positions.find((e: IPosition) => { return e.id === arc.source; });
+            const source = this.props.places.find((e: IPlace) => { return e.id === arc.source; });
             const target = this.props.transitions.find((e: ITransition) => { return e.id === arc.target; });
             if (source && target) {
                 return <Arc key={index} source={source} target={target}/>;

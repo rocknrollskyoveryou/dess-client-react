@@ -1,6 +1,6 @@
 import { IPObjectAction } from '../actions';
 import { IPetriObject } from '../types/petriNet';
-import { ADD_POSITION, ADD_TRANSITION } from '../constants/index';
+import { ADD_PLACE, ADD_TRANSITION } from '../constants/index';
 
 const INITIAL_STATE: IPetriObject = {
     positions: [],
@@ -12,7 +12,7 @@ const INITIAL_STATE: IPetriObject = {
 
 function pObjectReducer(state: IPetriObject = INITIAL_STATE, action: IPObjectAction): IPetriObject {
     switch (action.type) {
-    case ADD_POSITION:
+    case ADD_PLACE:
         return {
             ...state,
             positions: []

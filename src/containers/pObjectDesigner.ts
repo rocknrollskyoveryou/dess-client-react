@@ -4,13 +4,13 @@ import { Dispatch } from 'redux';
 
 // Types
 import { IStoreState } from '../types';
-import { IPosition, ITransition } from '../types/petriNet';
+import { IPlace, ITransition } from '../types/petriNet';
 
 // Dumb component
 import PObjectDesigner, { IProps } from '../components/PObjectDesigner';
 
 // Redux actions
-import { IPObjectAction, addPosition, addTransition } from '../actions';
+import { IPObjectAction, addPlace, addTransition } from '../actions';
 
 const mapStateToProps = ({ petriObject }: IStoreState) => {
   return {
@@ -20,7 +20,7 @@ const mapStateToProps = ({ petriObject }: IStoreState) => {
 
 const mapDispathToProps = (dispatch: Dispatch<IPObjectAction>) => {
   return {
-    onAddPosition: (position: IPosition) => dispatch(addPosition(position)),
+    onAddPlace: (place: IPlace) => dispatch(addPlace(place)),
     onAddTransition: (transition: ITransition) => dispatch(addTransition(transition)),
   };
 };

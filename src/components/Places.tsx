@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as d3 from 'd3';
-import { IPosition } from '../types/petriNet';
+import { IPlace } from '../types/petriNet';
 
-class Position extends React.Component<{ node: IPosition }, {}> {
+class Place extends React.Component<{ node: IPlace }, {}> {
     ref: SVGGElement;
 
     componentDidMount() {
@@ -50,7 +50,7 @@ class Position extends React.Component<{ node: IPosition }, {}> {
     }
 }
 
-export default class Positions extends React.Component<{nodes: IPosition[]}, {}> {
+export default class Places extends React.Component<{nodes: IPlace[]}, {}> {
   
     public componentDidMount(): void {
         
@@ -88,8 +88,8 @@ export default class Positions extends React.Component<{nodes: IPosition[]}, {}>
     }
   
     public render(): JSX.Element {
-        const nodes = this.props.nodes.map((node: IPosition, index: number) => {
-            return <Position key={index} node={node} />;
+        const nodes = this.props.nodes.map((node: IPlace, index: number) => {
+            return <Place key={index} node={node} />;
         });
 
         return (

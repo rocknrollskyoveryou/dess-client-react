@@ -9,6 +9,22 @@ class Transition extends React.Component<{ node: ITransition }, {}> {
         d3.select(this.ref).data([this.props.node]);
     }
 
+    public shouldComponentUpdate(nextProps: { node: ITransition }): boolean {
+        const { x, y } = this.props.node;
+        const { x: newX, y: newY } = nextProps.node;
+
+        if (x !== newX || y !== newY) {
+            return false; 
+        }
+
+        return true;
+    }
+
+    public componentWillReceiveProps(nextProps: { node: ITransition }): void {
+        const {x, y, width, height} = nextProps.node;
+        d3.select(this.ref).attr('transform', `${x - width / 2}, ${y - height / 2}`);
+    }
+
     public render(): JSX.Element {
         const { id, label, x, y, width, height, priority } = this.props.node;
 
@@ -44,10 +60,19 @@ class Transition extends React.Component<{ node: ITransition }, {}> {
     }
 }
 
-export default class Transitions extends React.Component<{nodes: ITransition[], (d: ITransition): void}, {}> {
+export default class Transitions extends React.Component<
+{nodes: ITransition[], onDrag: (d: any, el: any) => void}, {}> {
   
     public componentDidMount(): void {
-        
+  
+        const self = this;
+
+        function onDrag(d: any) {
+            d.x = d3.event.x - d.width / 2; 
+            d.y = d3.event.y - d.height / 2;
+            self.props.onDrag(d, this);
+        }
+
         d3.selectAll('.transition')
             .call(d3.drag()
             .on('start', onDragStart)
@@ -55,19 +80,13 @@ export default class Transitions extends React.Component<{nodes: ITransition[], 
             .on('end', onDragEnd));
 
         function onDragStart(d: any) {
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function onDrag(d: ITransition) {
-            d.x += d3.event.dx;
-            d.y += d3.event.dy;
-            this.props.onDrag(d);
+            // d.fx = d.x;
+            // d.fy = d.y;
         }
 
         function onDragEnd(d: any) {
-            d.fx = null;
-            d.fy = null;
+            // d.fx = null;
+            // d.fy = null;
         }
     }
   
