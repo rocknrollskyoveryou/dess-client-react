@@ -4,7 +4,10 @@ import * as d3 from 'd3';
 import { withStyles, Theme, StyleRules, WithStyles } from 'material-ui/styles';
 import { IClasses } from '../types';
 import { compose } from 'redux';
-import { IPlace, ITransition } from '../types/petriNet';
+import { IPlace, ITransition, IArcDrawer, IArc } from '../types/petriNet';
+import {
+    IAddPlace, IUpdatePlace, IAddTransition, IUpdateTransition, IDrawArc, IPetriNetUpdateAction, IAddArc
+} from '../actions';
 
 interface IDefaultProps {
     gridSize: number;
@@ -17,8 +20,13 @@ interface IProps {
     gridSize?: number;
     gridSpacing?: number;
     gridDot?: number;
-    onUpdatePlace?: (place: IPlace) => void;
-    onUpdateTransition?: (transition: ITransition) => void;
+    arcDrawer?: IArcDrawer;
+    onAddPlace?: (place: IPlace) => IAddPlace;
+    onUpdatePlace?: (place: IPlace) => IUpdatePlace;
+    onAddTransition?: (transition: ITransition) => IAddTransition;
+    onUpdateTransition?: (transition: ITransition) => IUpdateTransition;
+    onAddArc: (arc: IArc) => IAddArc;
+    onDrawArc: (arcDrawer: IArcDrawer) => IDrawArc;
 }
 
 class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> {
@@ -38,15 +46,21 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
 
         d3.selectAll('.place')
             .on('mousedown', this.onPlaceMouseDown)
-            .on('mouseup', this.onPlaceMouseUp)
+            .on('mouseup', this.addArc)
             .call(d3.drag()
+            .filter(() => this.props.arcDrawer === undefined)
             .on('drag', this.onPlaceDrag));
 
         d3.selectAll('.transition')
             .on('mousedown', this.onTransitionMouseDown)
-            .on('mouseup', this.onTransitionMouseUp)
+            .on('mouseup', this.addArc)
             .call(d3.drag()
+            .filter(() => this.props.arcDrawer === undefined)
             .on('drag', this.onTransitionDrag));
+
+        d3.select(this.view)
+            .on('mousemove', this.onViewMouseMove)
+            .on('mouseup', this.onViewMouseUp);
     }
 
     public render(): JSX.Element {
@@ -132,48 +146,83 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         );
     }
 
+    private drawArc = (arc: IArcDrawer) => {
+        if (this.props.onDrawArc) {
+            this.props.onDrawArc(arc);
+        }
+    }
+
+    private addArc = (target: IPlace | ITransition): void => {
+        const { arcDrawer } = this.props;
+        if (arcDrawer) {
+            const arc = {
+                source: arcDrawer.source,
+                target: target.id,
+                isIncoming: arcDrawer.isIncoming,
+            };
+            
+            this.props.onAddArc(arc);
+        }
+    }
+
+    private moveElement = (el: IPlace | ITransition,
+                           callback: (el: IPlace | ITransition) => IPetriNetUpdateAction) => {
+        if (!d3.event.shiftKey) {
+            el.x += d3.event.dx;
+            el.y += d3.event.dy;
+            callback(el);
+        }
+    }
+
+    // View event listeners
+    
+    private onViewMouseMove = () => {
+        d3.event.preventDefault();
+        const { arcDrawer } = this.props;
+        if (arcDrawer) {
+            this.drawArc({
+                ...arcDrawer,
+                mouseX: d3.event.offsetX,
+                mouseY: d3.event.offsetY,
+            });
+        } else {
+            return;
+        }
+    }
+
+    private onViewMouseUp = (d: any) => {
+        if (this.props.arcDrawer) {
+            this.drawArc(undefined);
+        }
+    }
+
     // Place event listeners
 
     private onPlaceDrag = (d: IPlace): void => {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
         if (this.props.onUpdatePlace) {
-            this.props.onUpdatePlace(d);
+            this.moveElement(d, this.props.onUpdatePlace);
         }
     }
 
     private onPlaceMouseDown = (d: IPlace): void => {
-        // if (d3.event.shiftKey === true) {
-        //     onStartDrawIncomingArc(placeId: d.id);
-        // }
-    }
-    private onPlaceMouseUp = (d: IPlace): void => {
-        // if (d3.event.shiftKey === true) {
-        //     onFinishDrawOutgoingArc(placeId: d.id);
-        // }
+        if (d3.event.shiftKey) {
+            this.drawArc({ source: d.id, mouseX: d.x, mouseY: d.y, isIncoming: true });
+        }
     }
 
     // Transition event listeners
 
     private onTransitionDrag = (d: ITransition): void => {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
         if (this.props.onUpdateTransition) {
-            this.props.onUpdateTransition(d);
+            this.moveElement(d, this.props.onUpdateTransition);
         }
     }
 
     private onTransitionMouseDown = (d: ITransition): void => {
-        // if (d3.event.shiftKey === true) {
-        //     onStartDrawIncomingArc(placeId: d.id);
-        // }
+        if (d3.event.shiftKey) {
+            this.drawArc({ source: d.id, mouseX: d3.event.x, mouseY: d3.event.y, isIncoming: false });
+        }
     }
-    private onTransitionMouseUp = (d: ITransition): void => {
-        // if (d3.event.shiftKey === true) {
-        //     onFinishDrawOutgoingArc(placeId: d.id);
-        // }
-    }
-
 }
 
 const styles = (theme: Theme): StyleRules => ({

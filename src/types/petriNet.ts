@@ -19,27 +19,23 @@ export interface ITransition {
 }
 
 export interface IArc {
-  placeId: string;
-  transitionId: string;
+  source: string;
+  target: string;
+  isIncoming: boolean;
 }
 
-export interface IIncomingArcDrawer {
-  placeId: string;
+interface IArcCreator {
+  source: string;
   mouseX: number;
   mouseY: number;
+  isIncoming: boolean;
 }
 
-export interface IOutgoingArcDrawer {
-  transitionId: string;
-  mouseX: number;
-  mouseY: number;
-}
+export type IArcDrawer = IArcCreator | undefined;
 
 export interface IPetriNet {
   places: Array<IPlace>;
   transitions: Array<ITransition>;
-  incomingArcs: Array<IArc>;
-  outgoingArcs: Array<IArc>;
-  incomingArcDrawer?: IIncomingArcDrawer;
-  outgoingArcDrawer?: IOutgoingArcDrawer;
+  arcs: Array<IArc>;
+  arcDrawer?: IArcDrawer;
 }

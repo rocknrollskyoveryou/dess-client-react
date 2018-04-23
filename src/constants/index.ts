@@ -12,17 +12,11 @@ export type ADD_TRANSITION = typeof ADD_TRANSITION;
 export const UPDATE_TRANSITION = 'UPDATE_TRANSITION';
 export type UPDATE_TRANSITION = typeof UPDATE_TRANSITION;
 
-export const ADD_INCOMING_ARC = 'ADD_INCOMING_ARC';
-export type ADD_INCOMING_ARC = typeof ADD_INCOMING_ARC;
+export const ADD_ARC = 'ADD_ARC';
+export type ADD_ARC = typeof ADD_ARC;
 
-export const ADD_OUTGOING_ARC = 'ADD_OUTGOING_ARC';
-export type ADD_OUTGOING_ARC = typeof ADD_OUTGOING_ARC;
-
-export const DRAW_INCOMING_ARC = 'DRAW_INCOMING_ARC';
-export type DRAW_INCOMING_ARC = typeof DRAW_INCOMING_ARC;
-
-export const DRAW_OUTGOING_ARC = 'DRAW_OUTGOING_ARC';
-export type DRAW_OUTGOING_ARC = typeof DRAW_OUTGOING_ARC;
+export const DRAW_ARC = 'DRAW_ARC';
+export type DRAW_ARC = typeof DRAW_ARC;
 
 export const PRELOADED_STATE = {
     petriNet: {
@@ -57,16 +51,12 @@ export const PRELOADED_STATE = {
                 priority: 2,
             },
         ],
-        incomingArcs:  [
+        arcs: [
             {
-                placeId: 'place-1',
-                transitionId: 'transition-1',
+                source: 'place-1',
+                target: 'transition-1',
+                isIncoming: true,
             },
-            {
-                placeId: 'place-1',
-                transitionId: 'transition-2',
-            }
         ],
-        outgoingArcs: [],
     },
 };
