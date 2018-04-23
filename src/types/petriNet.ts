@@ -19,14 +19,17 @@ export interface ITransition {
 }
 
 export interface IArc {
-  source: string;
-  target: string;
+  placeId: string;
+  transitionId: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
 }
 
-export interface IPetriObject {
-  positions?: Array<IPlace>;
-  transitions?: Array<ITransition>;
-  incomingArcs?: Array<IArc>;
-  outgoingArcs?: Array<IArc>;
-  simulationTime?: number;
+export interface IPetriNet {
+  places: Array<IPlace>;
+  transitions: Array<ITransition>;
+  incomingArcs: Array<IArc>;
+  outgoingArcs: Array<IArc>;
 }

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import pObjectReducer from './pObjectReducer';
+import pNetReducer from './pNetReducer';
 import { IStoreState } from '../types';
 
 /*
@@ -9,7 +9,7 @@ import { IStoreState } from '../types';
 * And also communication between the reducers will be easier to maintain.
 */
 const rootReducer = combineReducers<IStoreState>({
-  petriObject: pObjectReducer,
+  petriNet: pNetReducer,
 });
 
 export default rootReducer;

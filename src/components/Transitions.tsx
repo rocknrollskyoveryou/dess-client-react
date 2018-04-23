@@ -2,31 +2,15 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import { ITransition } from '../types/petriNet';
 
-class Transition extends React.Component<{ node: ITransition }, {}> {
+class Transition extends React.Component<{ data: ITransition }, {}> {
     ref: SVGGElement;
 
     public componentDidMount(): void {
-        d3.select(this.ref).data([this.props.node]);
-    }
-
-    public shouldComponentUpdate(nextProps: { node: ITransition }): boolean {
-        const { x, y } = this.props.node;
-        const { x: newX, y: newY } = nextProps.node;
-
-        if (x !== newX || y !== newY) {
-            return false; 
-        }
-
-        return true;
-    }
-
-    public componentWillReceiveProps(nextProps: { node: ITransition }): void {
-        const {x, y, width, height} = nextProps.node;
-        d3.select(this.ref).attr('transform', `${x - width / 2}, ${y - height / 2}`);
+        d3.select(this.ref).data([this.props.data]);
     }
 
     public render(): JSX.Element {
-        const { id, label, x, y, width, height, priority } = this.props.node;
+        const { id, label, x, y, width, height, priority } = this.props.data;
 
         return (
             <g
@@ -61,38 +45,54 @@ class Transition extends React.Component<{ node: ITransition }, {}> {
 }
 
 export default class Transitions extends React.Component<
-{nodes: ITransition[], onDrag: (d: any, el: any) => void}, {}> {
+{data: ITransition[], onDrag?: (transition: ITransition) => void}, {}> {
   
     public componentDidMount(): void {
-  
-        const self = this;
-
-        function onDrag(d: any) {
-            d.x = d3.event.x - d.width / 2; 
-            d.y = d3.event.y - d.height / 2;
-            self.props.onDrag(d, this);
-        }
+        const onUpdateTransition = this.props.onDrag;
 
         d3.selectAll('.transition')
             .call(d3.drag()
-            .on('start', onDragStart)
-            .on('drag', onDrag)
-            .on('end', onDragEnd));
+            .on('drag', onDrag));
 
-        function onDragStart(d: any) {
-            // d.fx = d.x;
-            // d.fy = d.y;
+        function onMouseEnter() {
+            d3.select(this)
+                .transition()
+                    .duration(150)
+                    .attr('transform', function(d: any) {
+                        return 'translate(' + d.x + ',' + d.y + ')scale(1.1)';
+                    });
         }
 
-        function onDragEnd(d: any) {
-            // d.fx = null;
-            // d.fy = null;
+        function onMouseLeave() {
+            d3.select(this)
+                .transition()
+                    .duration(150)
+                    .attr('transform', function(d: any) {
+                        return 'translate(' + d.x + ',' + d.y + ')scale(1)';
+                    });
+        }
+
+        function onDrag(d: ITransition) {
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+            if (onUpdateTransition) {
+                onUpdateTransition(d);
+            }
+            // d3.select(this)
+            //     .attr('transform', function(d: any) {
+            //         d.x += d3.event.dx;
+            //         d.y += d3.event.dy;
+            //         if (onUpdateTransition) {
+            //             onUpdateTransition(d);
+            //         }
+            //         return 'translate(' + d.x + ',' + d.y + ')';
+            //     });
         }
     }
   
     public render(): JSX.Element {
-        const nodes = this.props.nodes.map((node: ITransition, index: number) => {
-            return <Transition key={index} node={node} />;
+        const nodes = this.props.data.map((data: ITransition, index: number) => {
+            return <Transition key={index} data={data} />;
         });
 
         return (

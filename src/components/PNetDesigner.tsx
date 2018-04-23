@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { compose } from 'recompose';
 
 // Types
-import { IPetriObject, IPlace, ITransition, IArc } from '../types/petriNet';
+import { IPetriNet, IPlace, ITransition, IArc } from '../types/petriNet';
 import { IClasses } from '../types';
 
 // Material-ui components
@@ -18,63 +18,21 @@ import DesignerView from './DesignerView';
 import Places from './Places';
 import Transitions from './Transitions';
 import Arcs from './Arcs';
-import { IAddPlace, IAddTransition } from '../actions';
-
-const places: IPlace[] = [
-    {
-        id: 'place-1',
-        mark: 1,
-        label: 'Place 1',
-        x: 100,
-        y: 200,
-        width: 72,
-        height: 72,
-    },
-];
-
-const transitions: ITransition[] = [
-    {
-        id: 'transition-1',
-        label: 'Transition 1',
-        x: 400,
-        y: 300,
-        width: 18,
-        height: 72,
-        priority: 1,
-    },
-    {
-        id: 'transition-2',
-        label: 'Transition 2',
-        x: 400,
-        y: 100,
-        width: 18,
-        height: 72,
-        priority: 2,
-    },
-];
-
-const arcs: IArc[] = [
-    {
-        source: 'place-1',
-        target: 'transition-1',
-    },
-    {
-        source: 'place-1',
-        target: 'transition-2',
-    }
-];
+import { IAddPlace, IUpdatePlace, IAddTransition, IUpdateTransition } from '../actions';
 
 export interface IProps {
-  petriObject: IPetriObject;
+  petriNet: IPetriNet;
   classes: IClasses;
   onAddPlace: (place: IPlace) => IAddPlace;
+  onUpdatePlace: (place: IPlace) => IUpdatePlace;
   onAddTransition: (transition: ITransition) => IAddTransition;
+  onUpdateTransition: (transition: ITransition) => IUpdateTransition;
 }
 
-class PObjectDesigner extends React.Component<IProps> {
+class PNetDesigner extends React.Component<IProps> {
 
     public render(): JSX.Element {
-        const { classes } = this.props;
+        const { petriNet, onUpdatePlace, onUpdateTransition, classes } = this.props;
 
         return (
             <div className={classes.root}>
@@ -96,20 +54,20 @@ class PObjectDesigner extends React.Component<IProps> {
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <DesignerView>
-                        <Places nodes={places} />
-                        <Transitions nodes={transitions} onDrag={this.onDrag} />
-                        <Arcs nodes={arcs} places={places} transitions={transitions} />
+                        <Places data={petriNet.places} onDrag={onUpdatePlace} />
+                        <Transitions data={petriNet.transitions} onDrag={onUpdateTransition}/>
+                        <Arcs data={petriNet} />
                     </DesignerView>    
                 </main>
             </div>
         );
     }
 
-    private onDrag(d: any, el: any) {
-        const i = transitions.findIndex((e) => e.id === d.id );
-        transitions[i].x = d.x;
-        transitions[i].y = d.y;
-    }
+    // private onDrag(d: any, el: any) {
+    //     const i = transitions.findIndex((e) => e.id === d.id );
+    //     transitions[i].x = d.x;
+    //     transitions[i].y = d.y;
+    // }
 }
 
 const styles = (theme: Theme): StyleRules => ({
@@ -136,4 +94,4 @@ const styles = (theme: Theme): StyleRules => ({
   toolbar: theme.mixins.toolbar,
 });
 
-export default withStyles(styles)(PObjectDesigner);
+export default withStyles(styles)(PNetDesigner);

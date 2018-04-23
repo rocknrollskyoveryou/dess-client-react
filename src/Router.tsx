@@ -8,7 +8,7 @@ import configureStore from './store/configureStore';
 import { PRELOADED_STATE } from './constants';
 
 // Petri-object designer container component
-import pObjectDesigner from './containers/pObjectDesigner';
+import PNetDesigner from './containers/pNetDesigner';
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory();
@@ -24,7 +24,7 @@ const Router = () => (
     <Provider store={store} >
         <ConnectedRouter history={history}>
             <Switch>
-                <Route path="/" component={pObjectDesigner} />
+                <Route path="/" component={PNetDesigner} />
             </Switch>
         </ConnectedRouter>    
     </Provider>

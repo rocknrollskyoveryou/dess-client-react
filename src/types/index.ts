@@ -1,8 +1,8 @@
-import { IPetriObject } from './petriNet';
+import { IPetriNet } from './petriNet';
 
 // Redux state
 export interface IStoreState {
-    petriObject: IPetriObject;
+    petriNet: IPetriNet;
 }
 
 // Material-ui style rules
