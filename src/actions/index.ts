@@ -1,5 +1,5 @@
 import * as constants from '../constants';
-import { IPlace, ITransition, IArc } from '../types/petriNet';
+import { IPlace, ITransition, IArc, IIncomingArcDrawer, IOutgoingArcDrawer } from '../types/petriNet';
 
 export interface IAddPlace {
     type: constants.ADD_PLACE;
@@ -31,11 +31,23 @@ export interface IAddOutgoingArc {
     arc: IArc;
 }
 
+export interface IDrawIncomingArc {
+    type: constants.DRAW_INCOMING_ARC;
+    incomingArcDrawer: IIncomingArcDrawer;
+}
+
+export interface IDrawOutgoingArc {
+    type: constants.DRAW_OUTGOING_ARC;
+    outgoingArcDrawer: IOutgoingArcDrawer;
+}
+
 export type IPetriNetAddAction = IAddPlace | IAddTransition | IAddIncomingArc | IAddOutgoingArc;
 
 export type IPetriNetUpdateAction = IUpdatePlace | IUpdateTransition;
 
-export type IPetriNetAction = IPetriNetAddAction | IPetriNetUpdateAction;
+export type IPetriNetDrawAction = IDrawIncomingArc | IDrawOutgoingArc;
+
+export type IPetriNetAction = IPetriNetAddAction | IPetriNetUpdateAction | IPetriNetDrawAction;
 
 export function addPlace(place: IPlace): IAddPlace {
     return {
@@ -73,6 +85,27 @@ export function addIncomingArc(arc: IArc): IAddIncomingArc {
 }
 
 export function addOutgoingArc(arc: IArc): IAddOutgoingArc {
+    return {
+        type: constants.ADD_OUTGOING_ARC,
+        arc,
+    };
+}
+
+export function drawIncomingArc(incomingArcDrawer: IIncomingArcDrawer): IDrawIncomingArc {
+    return {
+        type: constants.DRAW_INCOMING_ARC,
+        incomingArcDrawer,
+    };
+}
+
+export function drawOutgoingArc(outgoingArcDrawer: IOutgoingArcDrawer): IDrawOutgoingArc {
+    return {
+        type: constants.DRAW_OUTGOING_ARC,
+        outgoingArcDrawer,
+    };
+}
+
+export function finishDrawOutgoingArc(arc: IArc): IAddOutgoingArc {
     return {
         type: constants.ADD_OUTGOING_ARC,
         arc,

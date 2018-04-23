@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import { withStyles, Theme, StyleRules, WithStyles } from 'material-ui/styles';
 import { IClasses } from '../types';
 import { compose } from 'redux';
+import { IPlace, ITransition } from '../types/petriNet';
 
 interface IDefaultProps {
     gridSize: number;
@@ -16,6 +17,8 @@ interface IProps {
     gridSize?: number;
     gridSpacing?: number;
     gridDot?: number;
+    onUpdatePlace?: (place: IPlace) => void;
+    onUpdateTransition?: (transition: ITransition) => void;
 }
 
 class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> {
@@ -30,6 +33,21 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
 
     // SVG Petri net entities
     private entities: SVGGElement;
+
+    public componentDidMount(): void {
+
+        d3.selectAll('.place')
+            .on('mousedown', this.onPlaceMouseDown)
+            .on('mouseup', this.onPlaceMouseUp)
+            .call(d3.drag()
+            .on('drag', this.onPlaceDrag));
+
+        d3.selectAll('.transition')
+            .on('mousedown', this.onTransitionMouseDown)
+            .on('mouseup', this.onTransitionMouseUp)
+            .call(d3.drag()
+            .on('drag', this.onTransitionDrag));
+    }
 
     public render(): JSX.Element {
         const { classes, children } = this.props;
@@ -113,6 +131,49 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
             </defs>   
         );
     }
+
+    // Place event listeners
+
+    private onPlaceDrag = (d: IPlace): void => {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        if (this.props.onUpdatePlace) {
+            this.props.onUpdatePlace(d);
+        }
+    }
+
+    private onPlaceMouseDown = (d: IPlace): void => {
+        // if (d3.event.shiftKey === true) {
+        //     onStartDrawIncomingArc(placeId: d.id);
+        // }
+    }
+    private onPlaceMouseUp = (d: IPlace): void => {
+        // if (d3.event.shiftKey === true) {
+        //     onFinishDrawOutgoingArc(placeId: d.id);
+        // }
+    }
+
+    // Transition event listeners
+
+    private onTransitionDrag = (d: ITransition): void => {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        if (this.props.onUpdateTransition) {
+            this.props.onUpdateTransition(d);
+        }
+    }
+
+    private onTransitionMouseDown = (d: ITransition): void => {
+        // if (d3.event.shiftKey === true) {
+        //     onStartDrawIncomingArc(placeId: d.id);
+        // }
+    }
+    private onTransitionMouseUp = (d: ITransition): void => {
+        // if (d3.event.shiftKey === true) {
+        //     onFinishDrawOutgoingArc(placeId: d.id);
+        // }
+    }
+
 }
 
 const styles = (theme: Theme): StyleRules => ({

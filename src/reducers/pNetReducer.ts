@@ -1,9 +1,20 @@
 import {
-    IPetriNetAction, IAddPlace, IUpdatePlace, IAddTransition, IUpdateTransition, IAddIncomingArc, IAddOutgoingArc
-} from '../actions';
-import { IPetriNet, IPlace, ITransition, IArc } from '../types/petriNet';
+    IPetriNet, IPlace, ITransition, IArc
+} from '../types/petriNet';
+
 import {
-    ADD_PLACE, UPDATE_PLACE, ADD_TRANSITION, UPDATE_TRANSITION, ADD_INCOMING_ARC, ADD_OUTGOING_ARC
+    IPetriNetAction,
+    IAddPlace, IUpdatePlace,
+    IAddTransition, IUpdateTransition,
+    IAddIncomingArc, IAddOutgoingArc,
+    IDrawIncomingArc, IDrawOutgoingArc
+} from '../actions';
+
+import {
+    ADD_PLACE, UPDATE_PLACE,
+    ADD_TRANSITION, UPDATE_TRANSITION,
+    ADD_INCOMING_ARC, ADD_OUTGOING_ARC,
+    DRAW_INCOMING_ARC, DRAW_OUTGOING_ARC
 } from '../constants/index';
 
 const INITIAL_STATE: IPetriNet = {
@@ -75,6 +86,16 @@ function pNetReducer(state: IPetriNet = INITIAL_STATE, action: IPetriNetAction):
                     (<IAddOutgoingArc> action).arc,
                 ],
             };
+        case DRAW_INCOMING_ARC:
+            return {
+                ...state,
+                incomingArcDrawer: (<IDrawIncomingArc> action).incomingArcDrawer,
+            };
+        case DRAW_OUTGOING_ARC:
+            return {
+                ...state,
+                outgoingArcDrawer: (<IDrawOutgoingArc> action).outgoingArcDrawer,
+            };    
         default:
             return state;    
     }

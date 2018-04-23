@@ -51,48 +51,7 @@ class Place extends React.Component<{ data: IPlace, index: number }, {}> {
     }
 }
 
-export default class Places extends React.Component<{
-    data: IPlace[], onDrag?: (place: IPlace) => void 
-}, {}> {
-  
-    public componentDidMount(): void {
-        const onUpdatePlace = this.props.onDrag;
-
-        d3.selectAll('.place')
-            .call(d3.drag()
-            .on('drag', onDrag));
-
-        function onMouseEnter() {
-            d3.select(this)
-                .transition()
-                    .duration(150)
-                    .attr('transform', function(d: any) {
-                        return 'translate(' + d.x + ',' + d.y + ')scale(1.1)';
-                    });
-        }
-
-        function onMouseLeave() {
-            d3.select(this)
-                .transition()
-                    .duration(150)
-                    .attr('transform', function(d: any) {
-                        return 'translate(' + d.x + ',' + d.y + ')scale(1)';
-                    });
-        }
-
-        function onDrag(d: IPlace) {
-            d.x += d3.event.dx;
-            d.y += d3.event.dy;
-            if (onUpdatePlace) {
-                onUpdatePlace(d);
-            }
-            // d3.select(this)
-            //     .attr('transform', function(d: any) {
-                    
-            //         return 'translate(' + d.x + ',' + d.y + ')';
-            //     });
-        }
-    }
+export default class Places extends React.Component<{ data: IPlace[] }, {}> {
   
     public render(): JSX.Element {
         const nodes = this.props.data.map((data: IPlace, index: number) => {

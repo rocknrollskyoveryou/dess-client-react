@@ -18,25 +18,10 @@ interface ICurve {
 class Arc extends React.Component<ID3Arc, {}> {
     private ref: SVGPathElement;
   
-    // private linkRadial = d3.linkHorizontal()
-    //     .x(function(d: any) { return d[0]; })
-    //     .y(function(d: any) { return d[1]; });
-
-    public componentDidMount(): void {
-        // this.updatePlace(this.props);
-    }
-
-    public componentWillReceiveProps(nextProps: ID3Arc): void {
-        // this.updatePlace(nextProps);
-    }
-
-    // public shouldComponentUpdate(nextProps: ID3Arc): boolean {
-    //     return false;
-    // }
-  
     public render(): JSX.Element {
         const { source, target } = this.props;
         const { x0, y0, x1, y1, midX } = this.calcPath();
+        
         return(
             <path
                 className="arc"
@@ -76,28 +61,6 @@ class Arc extends React.Component<ID3Arc, {}> {
 
         return curve;
     }
-    // private updatePlace(pos: ID3Arc): void {
-    //     const { source, target } = this.props;
-
-    //     let x0: number = source.x, x1: number = target.x;
-
-    //     const dx = target.x - source.x;
-    //     if (dx >= 0) {
-    //         x0 += source.width / 2 + 5;
-    //         x1 -= target.width / 2 + 9;
-    //     } else {
-    //         x0 -= source.width / 2 + 5;
-    //         x1 += target.width / 2 + 9;
-    //     }
-
-    //     const arc = {
-    //         source: [x0, source.y],
-    //         target: [x1, target.y],
-    //     };
-    //     d3.select(this.ref)
-    //         .datum(arc)
-    //         .attr('d', this.linkRadial);
-    // }
 }
 
 export default class Arcs extends React.Component<{ data: IPetriNet }, {}> {

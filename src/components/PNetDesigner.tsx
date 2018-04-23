@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { compose } from 'recompose';
 
 // Types
-import { IPetriNet, IPlace, ITransition, IArc } from '../types/petriNet';
+import { IPetriNet, IPlace, ITransition, IArc, IIncomingArcDrawer, IOutgoingArcDrawer } from '../types/petriNet';
 import { IClasses } from '../types';
 
 // Material-ui components
@@ -18,7 +18,12 @@ import DesignerView from './DesignerView';
 import Places from './Places';
 import Transitions from './Transitions';
 import Arcs from './Arcs';
-import { IAddPlace, IUpdatePlace, IAddTransition, IUpdateTransition } from '../actions';
+import {
+    IAddPlace, IUpdatePlace,
+    IAddTransition, IUpdateTransition,
+    IAddIncomingArc, IAddOutgoingArc,
+    IDrawIncomingArc, IDrawOutgoingArc,
+} from '../actions';
 
 export interface IProps {
   petriNet: IPetriNet;
@@ -27,12 +32,22 @@ export interface IProps {
   onUpdatePlace: (place: IPlace) => IUpdatePlace;
   onAddTransition: (transition: ITransition) => IAddTransition;
   onUpdateTransition: (transition: ITransition) => IUpdateTransition;
+//   onAddIncomingArc: (arc: IArc) => IAddIncomingArc;
+//   onAddOutgoingArc: (arc: IArc) => IAddOutgoingArc;
+  onDrawIncomingArc: (incomingArcDrawer: IIncomingArcDrawer) => IDrawIncomingArc;
+  onDrawOutgoingArc: (outgoingArcDrawer: IOutgoingArcDrawer) => IDrawOutgoingArc;
 }
 
 class PNetDesigner extends React.Component<IProps> {
 
     public render(): JSX.Element {
-        const { petriNet, onUpdatePlace, onUpdateTransition, classes } = this.props;
+        const {
+            petriNet,
+            onUpdatePlace, onUpdateTransition,
+            // onAddIncomingArc, onAddOutgoingArc,
+            onDrawIncomingArc, onDrawOutgoingArc,
+            classes
+        } = this.props;
 
         return (
             <div className={classes.root}>
@@ -53,21 +68,22 @@ class PNetDesigner extends React.Component<IProps> {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <DesignerView>
-                        <Places data={petriNet.places} onDrag={onUpdatePlace} />
-                        <Transitions data={petriNet.transitions} onDrag={onUpdateTransition}/>
+                    <DesignerView
+                        onUpdatePlace={onUpdatePlace}
+                        onUpdateTransition={onUpdateTransition}
+                        // onAddIncomingArc={onAddIncomingArc}
+                        // onAddOutgoingArc={onAddOutgoingArc}
+                        // onDrawIncomingArc={onDrawIncomingArc}
+                        // onDrawOutgoingArc={onDrawOutgoingArc}
+                    >
+                        <Places data={petriNet.places} />
+                        <Transitions data={petriNet.transitions} />
                         <Arcs data={petriNet} />
                     </DesignerView>    
                 </main>
             </div>
         );
     }
-
-    // private onDrag(d: any, el: any) {
-    //     const i = transitions.findIndex((e) => e.id === d.id );
-    //     transitions[i].x = d.x;
-    //     transitions[i].y = d.y;
-    // }
 }
 
 const styles = (theme: Theme): StyleRules => ({

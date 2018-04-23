@@ -44,51 +44,7 @@ class Transition extends React.Component<{ data: ITransition }, {}> {
     }
 }
 
-export default class Transitions extends React.Component<
-{data: ITransition[], onDrag?: (transition: ITransition) => void}, {}> {
-  
-    public componentDidMount(): void {
-        const onUpdateTransition = this.props.onDrag;
-
-        d3.selectAll('.transition')
-            .call(d3.drag()
-            .on('drag', onDrag));
-
-        function onMouseEnter() {
-            d3.select(this)
-                .transition()
-                    .duration(150)
-                    .attr('transform', function(d: any) {
-                        return 'translate(' + d.x + ',' + d.y + ')scale(1.1)';
-                    });
-        }
-
-        function onMouseLeave() {
-            d3.select(this)
-                .transition()
-                    .duration(150)
-                    .attr('transform', function(d: any) {
-                        return 'translate(' + d.x + ',' + d.y + ')scale(1)';
-                    });
-        }
-
-        function onDrag(d: ITransition) {
-            d.x += d3.event.dx;
-            d.y += d3.event.dy;
-            if (onUpdateTransition) {
-                onUpdateTransition(d);
-            }
-            // d3.select(this)
-            //     .attr('transform', function(d: any) {
-            //         d.x += d3.event.dx;
-            //         d.y += d3.event.dy;
-            //         if (onUpdateTransition) {
-            //             onUpdateTransition(d);
-            //         }
-            //         return 'translate(' + d.x + ',' + d.y + ')';
-            //     });
-        }
-    }
+export default class Transitions extends React.Component<{ data: ITransition[] }, {}> {
   
     public render(): JSX.Element {
         const nodes = this.props.data.map((data: ITransition, index: number) => {
