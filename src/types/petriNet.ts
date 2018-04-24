@@ -16,6 +16,9 @@ export interface ITransition {
   width: number;
   height: number;
   priority: number;
+  param: number;
+  paramDeviation?: number;
+  distribution: string;
 }
 
 export interface IArc {

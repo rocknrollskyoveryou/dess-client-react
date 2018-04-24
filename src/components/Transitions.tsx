@@ -11,7 +11,12 @@ class Transition extends React.Component<{ data: ITransition }, {}> {
 
     public render(): JSX.Element {
         const { id, label, x, y, width, height, priority } = this.props.data;
-
+        let fill = '#fff';
+        let stroke = '#757575';
+        if (id === 'transition-2') {
+            fill = '#9FA8DA';
+            stroke = '#3F51B5';
+        }
         return (
             <g
                 className="transition"
@@ -23,8 +28,8 @@ class Transition extends React.Component<{ data: ITransition }, {}> {
                     ry="3"
                     width={width}
                     height={height}
-                    fill="#fff"
-                    stroke="#757575"
+                    fill={fill}
+                    stroke={stroke}
                     strokeWidth="2"
                 />
                 <text

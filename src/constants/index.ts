@@ -40,6 +40,9 @@ export const PRELOADED_STATE = {
                 width: 18,
                 height: 72,
                 priority: 1,
+                param: 2,
+                paramDeviation: 1,
+                distribution: 'exp',
             },
             {
                 id: 'transition-2',
@@ -49,6 +52,9 @@ export const PRELOADED_STATE = {
                 width: 18,
                 height: 72,
                 priority: 2,
+                param: 5,
+                paramDeviation: 2,
+                distribution: 'exp',
             },
         ],
         arcs: [

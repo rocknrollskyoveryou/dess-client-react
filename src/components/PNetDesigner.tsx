@@ -10,8 +10,9 @@ import { IClasses } from '../types';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import List from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText, ListSubheader } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
+import Icon from 'material-ui/Icon';
 import { withStyles, Theme, StyleRules } from 'material-ui/styles';
 
 import DesignerView from './DesignerView';
@@ -23,6 +24,8 @@ import {
     IAddTransition, IUpdateTransition,
     IAddArc, IDrawArc,
 } from '../actions';
+import ParamsView from './ParamsView';
+import { Divider, Collapse } from 'material-ui';
 
 export interface IProps {
     petriNet: IPetriNet;
@@ -62,6 +65,39 @@ class PNetDesigner extends React.Component<IProps> {
                     }}
                 >
                     <div className={classes.toolbar} />
+                    
+                        <List
+                            subheader={<ListSubheader component="div">Models</ListSubheader>}
+                        >
+                            <ListItem button={true}>
+                                <ListItemIcon>
+                                    <Icon>view_module</Icon>
+                                </ListItemIcon>
+                                <ListItemText primary="My Model" />
+                                <Icon>expand_less</Icon>
+                            </ListItem>
+                            <Collapse in={true} timeout="auto" unmountOnExit={true}>
+                                <List component="div" disablePadding={true}>
+                                    <ListItem button={true} style={{ paddingLeft: 32 }}>
+                                        <ListItemIcon>
+                                            <Icon>settings</Icon>
+                                        </ListItemIcon>
+                                        <ListItemText inset={true} primary="New Petri Object" />
+                                    </ListItem>
+                                </List>
+                            </Collapse>
+                        </List>
+                    <Divider />
+                    <List
+                        subheader={<ListSubheader component="div">Petri Nets</ListSubheader>}
+                    >
+                        <ListItem button={true}>
+                            <ListItemIcon>
+                                <Icon>share</Icon>
+                            </ListItemIcon>
+                            <ListItemText primary="New Petri Net" />
+                        </ListItem>
+                    </List>                
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -75,7 +111,8 @@ class PNetDesigner extends React.Component<IProps> {
                         <Places data={petriNet.places} />
                         <Transitions data={petriNet.transitions} />
                         <Arcs data={petriNet} />
-                    </DesignerView>    
+                    </DesignerView> 
+                    <ParamsView transition={petriNet.transitions[1]} />  
                 </main>
             </div>
         );
@@ -96,7 +133,7 @@ const styles = (theme: Theme): StyleRules => ({
   },
   drawerPaper: {
     position: 'relative',
-    width: 240,
+    width: 320,
   },
   content: {
     flexGrow: 1,
