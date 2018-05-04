@@ -13,6 +13,7 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
+    "@material-ui/lab": "^1.0.0-alpha.1",
     "@types/d3": "^5.0.0",
     "@types/history": "^4.6.2",
     "@types/react": "^16.0.40",

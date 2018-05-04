@@ -6,6 +6,8 @@ export interface IPlace {
   y: number;
   width: number;
   height: number;
+  isPublic: boolean;
+  isImportant: boolean;
 }
 
 export interface ITransition {
@@ -19,6 +21,8 @@ export interface ITransition {
   param: number;
   paramDeviation?: number;
   distribution: string;
+  isPublic: boolean;
+  isImportant: boolean;
 }
 
 export interface IArc {

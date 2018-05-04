@@ -38,6 +38,8 @@ export const PRELOADED_STATE = {
                 y: 200,
                 width: 72,
                 height: 72,
+                isPublic: false,
+                isImportant: false,
             },
         ],
         transitions: [
@@ -52,6 +54,8 @@ export const PRELOADED_STATE = {
                 param: 2,
                 paramDeviation: 1,
                 distribution: 'exp',
+                isPublic: false,
+                isImportant: false,
             },
             {
                 id: 'transition-2',
@@ -64,6 +68,8 @@ export const PRELOADED_STATE = {
                 param: 5,
                 paramDeviation: 2,
                 distribution: 'exp',
+                isPublic: false,
+                isImportant: false,
             },
         ],
         arcs: [

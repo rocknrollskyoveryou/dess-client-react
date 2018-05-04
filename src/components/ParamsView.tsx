@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import Switch from 'material-ui/Switch';
 import { withStyles, Theme, StyleRules, WithStyles } from 'material-ui/styles';
 
 import { ITransition } from '../types/petriNet';
@@ -20,7 +22,7 @@ class ParamsView extends React.Component<IProps & WithStyles<'root' | 'textField
 
     public render(): JSX.Element {
         const { classes, transition } = this.props;
-        const { distribution } = this.state;
+        const { distribution, isPublic, isImportant } = this.state;
 
         return (
             <Paper className={classes.root}>
@@ -30,6 +32,28 @@ class ParamsView extends React.Component<IProps & WithStyles<'root' | 'textField
                     value={transition.label}
                     margin="normal"
                 />
+                <FormGroup row={true}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isPublic}
+                                onChange={this.handleChange('isPublic')}
+                                value="isPublic"
+                            />
+                        }
+                        label="Public"
+                    />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isImportant}
+                                onChange={this.handleChange('isImportant')}
+                                value="isImportant"
+                            />
+                        }
+                        label="Important"
+                    />
+                </FormGroup>
                 <TextField
                     label="Priority"
                     className={classes.textField}
@@ -55,7 +79,7 @@ class ParamsView extends React.Component<IProps & WithStyles<'root' | 'textField
                     className={classes.textField}
                     value={distribution}
                     margin="normal"
-                    onChange={(e) => { this.handleChange(e.target.value, 'distribution'); }}
+                    onChange={this.handleChange('distribution')}
                 >
                     <MenuItem key="distribution-type" value="none">
                         <em>None</em>
@@ -68,9 +92,10 @@ class ParamsView extends React.Component<IProps & WithStyles<'root' | 'textField
         );
     }
 
-    private handleChange = (val, field) => {
+    private handleChange = field => e => {
         const state = { ...this.state };
-        state[field] = val;
+        state[field] = field === 'isPublic' || field === 'isImportant' ? e.target.checked : e.target.value;
+        // state[field] = e.target.value;
         this.setState({ ...state });
     }
 }
