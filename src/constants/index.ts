@@ -1,16 +1,25 @@
 import { IPetriNet } from '../types/petriNet';
 
+export const SELECT_PLACE = 'SELECT_PLACE';
+export type SELECT_PLACE = typeof SELECT_PLACE;
+
 export const ADD_PLACE = 'ADD_PLACE';
 export type ADD_PLACE = typeof ADD_PLACE;
 
 export const UPDATE_PLACE = 'UPDATE_PLACE';
 export type UPDATE_PLACE = typeof UPDATE_PLACE;
 
+export const SELECT_TRANSITION = 'SELECT_TRANSITION';
+export type SELECT_TRANSITION = typeof SELECT_TRANSITION;
+
 export const ADD_TRANSITION = 'ADD_TRANSITION';
 export type ADD_TRANSITION = typeof ADD_TRANSITION;
 
 export const UPDATE_TRANSITION = 'UPDATE_TRANSITION';
 export type UPDATE_TRANSITION = typeof UPDATE_TRANSITION;
+
+export const SELECT_ARC = 'SELECT_ARC';
+export type SELECT_ARC = typeof SELECT_ARC;
 
 export const ADD_ARC = 'ADD_ARC';
 export type ADD_ARC = typeof ADD_ARC;
@@ -64,5 +73,8 @@ export const PRELOADED_STATE = {
                 isIncoming: true,
             },
         ],
+        selectedPlaceIdx: -1,
+        selectedTransitionIdx: -1,
+        selectedArcIdx: -1,
     },
 };

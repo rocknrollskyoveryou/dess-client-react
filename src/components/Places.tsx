@@ -2,27 +2,37 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import { IPlace } from '../types/petriNet';
 
-class Place extends React.Component<{ data: IPlace, index: number }, {}> {
+class Place extends React.Component<{ data: IPlace, index: number, selected: boolean }> {
     ref: SVGGElement;
 
-    componentDidMount() {
-        d3.select(this.ref).data([this.props.data]);
+    public componentDidMount(): void {
+        const { data, index } = this.props;
+
+        d3.select(this.ref).datum(data);
     }
 
-    render() {
+    public render(): JSX.Element {
+        const { index } = this.props;
         const { id, mark, label, x, y } = this.props.data;
+
+        let fill = '#fff';
+        let stroke = '#757575';
+        if (this.props.selected) {
+            fill = '#9FA8DA';
+            stroke = '#3F51B5';
+        }
 
         return (
             <g
-                data-index={this.props.index}
+                data-index={index}
                 className="place"
                 transform={`translate(${x}, ${y})`}
                 ref={(ref: SVGGElement) => this.ref = ref}
             >
                 <circle
                     r={36}
-                    fill="#fff"
-                    stroke="#757575"
+                    fill={fill}
+                    stroke={stroke}
                     strokeWidth="2"
                 />
                 <text
@@ -51,11 +61,19 @@ class Place extends React.Component<{ data: IPlace, index: number }, {}> {
     }
 }
 
-export default class Places extends React.Component<{ data: IPlace[] }, {}> {
+export default class Places extends React.Component<{places: IPlace[], selectedIdx: number}> {
   
     public render(): JSX.Element {
-        const nodes = this.props.data.map((data: IPlace, index: number) => {
-            return <Place key={index} data={data} index={index} />;
+        const { places, selectedIdx } = this.props;
+
+        const nodes = places.map((data: IPlace, index: number) => {
+            return (
+                <Place
+                    key={index}
+                    data={data}
+                    index={index}
+                    selected={selectedIdx === index}
+                />);
         });
 
         return (

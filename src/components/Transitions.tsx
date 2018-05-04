@@ -2,23 +2,32 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import { ITransition } from '../types/petriNet';
 
-class Transition extends React.Component<{ data: ITransition }, {}> {
+class Transition extends React.Component<{
+    data: ITransition, index: number, selected: boolean
+}> {
     ref: SVGGElement;
 
     public componentDidMount(): void {
-        d3.select(this.ref).data([this.props.data]);
+        const { data, index } = this.props;
+
+        d3.select(this.ref).datum(data);
     }
 
     public render(): JSX.Element {
+        const { index } = this.props;
         const { id, label, x, y, width, height, priority } = this.props.data;
+        
+        // Choose color if selected
         let fill = '#fff';
         let stroke = '#757575';
-        if (id === 'transition-2') {
+        if (this.props.selected) {
             fill = '#9FA8DA';
             stroke = '#3F51B5';
         }
+
         return (
             <g
+                data-index={index}
                 className="transition"
                 transform={`translate(${x - width / 2}, ${y - height / 2})`}
                 ref={(ref: SVGGElement) => this.ref = ref}
@@ -49,11 +58,22 @@ class Transition extends React.Component<{ data: ITransition }, {}> {
     }
 }
 
-export default class Transitions extends React.Component<{ data: ITransition[] }, {}> {
+export default class Transitions extends React.Component<{ 
+    transitions: ITransition[], selectedIdx: number,
+}> {
   
     public render(): JSX.Element {
-        const nodes = this.props.data.map((data: ITransition, index: number) => {
-            return <Transition key={index} data={data} />;
+        const { transitions, selectedIdx } = this.props;
+
+        const nodes = transitions.map((data: ITransition, index: number) => {
+            return (
+                <Transition
+                    key={index}
+                    data={data}
+                    index={index}
+                    selected={selectedIdx === index}
+                />
+            );
         });
 
         return (

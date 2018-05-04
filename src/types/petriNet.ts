@@ -41,4 +41,7 @@ export interface IPetriNet {
   transitions: Array<ITransition>;
   arcs: Array<IArc>;
   arcDrawer?: IArcDrawer;
+  selectedPlaceIdx: number;
+  selectedTransitionIdx: number;
+  selectedArcIdx: number;
 }

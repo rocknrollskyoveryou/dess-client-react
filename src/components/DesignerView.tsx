@@ -6,7 +6,9 @@ import { IClasses } from '../types';
 import { compose } from 'redux';
 import { IPlace, ITransition, IArcDrawer, IArc } from '../types/petriNet';
 import {
-    IAddPlace, IUpdatePlace, IAddTransition, IUpdateTransition, IDrawArc, IPetriNetUpdateAction, IAddArc
+    IAddPlace, IUpdatePlace,
+    IAddTransition, IUpdateTransition,
+    IDrawArc, IPetriNetUpdateAction, IAddArc, ISelectPlace, ISelectTransition
 } from '../actions';
 
 interface IDefaultProps {
@@ -21,12 +23,14 @@ interface IProps {
     gridSpacing?: number;
     gridDot?: number;
     arcDrawer?: IArcDrawer;
+    onSelectPlace?: (index: number) => ISelectPlace;
     onAddPlace?: (place: IPlace) => IAddPlace;
     onUpdatePlace?: (place: IPlace) => IUpdatePlace;
+    onSelectTransition?: (index: number) => ISelectTransition;
     onAddTransition?: (transition: ITransition) => IAddTransition;
     onUpdateTransition?: (transition: ITransition) => IUpdateTransition;
-    onAddArc: (arc: IArc) => IAddArc;
-    onDrawArc: (arcDrawer: IArcDrawer) => IDrawArc;
+    onAddArc?: (arc: IArc) => IAddArc;
+    onDrawArc?: (arcDrawer: IArcDrawer) => IDrawArc;
 }
 
 class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> {
@@ -45,14 +49,14 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
     public componentDidMount(): void {
 
         d3.selectAll('.place')
-            .on('mousedown', this.onPlaceMouseDown)
+            .on('mousedown', onPlaceMouseDown)
             .on('mouseup', this.addArc)
             .call(d3.drag()
             .filter(() => this.props.arcDrawer === undefined)
             .on('drag', this.onPlaceDrag));
 
         d3.selectAll('.transition')
-            .on('mousedown', this.onTransitionMouseDown)
+            .on('mousedown', onTransitionMouseDown)
             .on('mouseup', this.addArc)
             .call(d3.drag()
             .filter(() => this.props.arcDrawer === undefined)
@@ -61,6 +65,24 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         d3.select(this.view)
             .on('mousemove', this.onViewMouseMove)
             .on('mouseup', this.onViewMouseUp);
+
+        const { onSelectPlace, onSelectTransition, onDrawArc } = this.props;
+
+        function onPlaceMouseDown(d: IPlace): void {
+            if (onDrawArc && d3.event.shiftKey) {
+                onDrawArc({ source: d.id, mouseX: d.x, mouseY: d.y, isIncoming: true });
+            } else if (onSelectPlace) {
+                onSelectPlace(+this.dataset.index);
+            }
+        }
+
+        function onTransitionMouseDown(d: ITransition): void {
+            if (onDrawArc && d3.event.shiftKey) {
+                onDrawArc({ source: d.id, mouseX: d3.event.x, mouseY: d3.event.y, isIncoming: false });
+            } else if (onSelectTransition) {
+                onSelectTransition(+this.dataset.index);
+            }
+        }
     }
 
     public render(): JSX.Element {
@@ -153,15 +175,16 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
     }
 
     private addArc = (target: IPlace | ITransition): void => {
-        const { arcDrawer } = this.props;
+        const { arcDrawer, onAddArc } = this.props;
         if (arcDrawer) {
             const arc = {
                 source: arcDrawer.source,
                 target: target.id,
                 isIncoming: arcDrawer.isIncoming,
             };
-            
-            this.props.onAddArc(arc);
+            if (onAddArc) {
+                onAddArc(arc);
+            }
         }
     }
 
@@ -204,12 +227,6 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         }
     }
 
-    private onPlaceMouseDown = (d: IPlace): void => {
-        if (d3.event.shiftKey) {
-            this.drawArc({ source: d.id, mouseX: d.x, mouseY: d.y, isIncoming: true });
-        }
-    }
-
     // Transition event listeners
 
     private onTransitionDrag = (d: ITransition): void => {
@@ -218,11 +235,6 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         }
     }
 
-    private onTransitionMouseDown = (d: ITransition): void => {
-        if (d3.event.shiftKey) {
-            this.drawArc({ source: d.id, mouseX: d3.event.x, mouseY: d3.event.y, isIncoming: false });
-        }
-    }
 }
 
 const styles = (theme: Theme): StyleRules => ({

@@ -84,9 +84,9 @@ class Arc extends React.Component<ID3Arc, {}> {
     }
 }
 
-export default class Arcs extends React.Component<{ data: IPetriNet }, {}> {
+export default class Arcs extends React.Component<{ petriNet: IPetriNet, onSelect: (index: number) => void }> {
     public render(): JSX.Element {
-        const { arcs } = this.props.data;
+        const { arcs } = this.props.petriNet;
 
         return (
             <g className="arcs">
@@ -97,7 +97,7 @@ export default class Arcs extends React.Component<{ data: IPetriNet }, {}> {
     }
 
     private renderArc = (arc: IArc, index: number): JSX.Element | null => {
-        const { places, transitions } = this.props.data;
+        const { places, transitions } = this.props.petriNet;
 
         let source: IPlace | ITransition | undefined;
         let target: IPlace | ITransition | undefined;
@@ -121,7 +121,7 @@ export default class Arcs extends React.Component<{ data: IPetriNet }, {}> {
     }
 
     private renderArcDrawer() {
-        const { arcDrawer, places, transitions } = this.props.data;
+        const { arcDrawer, places, transitions } = this.props.petriNet;
 
         if (arcDrawer) {
             let source: IPlace | ITransition | undefined;

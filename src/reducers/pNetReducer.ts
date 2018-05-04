@@ -6,23 +6,33 @@ import {
     IPetriNetAction,
     IAddPlace, IUpdatePlace,
     IAddTransition, IUpdateTransition,
-    IAddArc, IDrawArc,
+    IAddArc, IDrawArc, ISelectPlace, ISelectTransition, ISelectArc,
 } from '../actions';
 
 import {
-    ADD_PLACE, UPDATE_PLACE,
-    ADD_TRANSITION, UPDATE_TRANSITION,
-    ADD_ARC, DRAW_ARC,
+    SELECT_PLACE, ADD_PLACE, UPDATE_PLACE,
+    SELECT_TRANSITION, ADD_TRANSITION, UPDATE_TRANSITION,
+    SELECT_ARC, ADD_ARC, DRAW_ARC,
 } from '../constants/index';
 
 const INITIAL_STATE: IPetriNet = {
     places: [],
     transitions: [],
-    arcs:  [],
+    arcs: [],
+    selectedPlaceIdx: -1,
+    selectedTransitionIdx: -1,
+    selectedArcIdx: -1,
 };
 
 function pNetReducer(state: IPetriNet = INITIAL_STATE, action: IPetriNetAction): IPetriNet {
     switch (action.type) {
+        case SELECT_PLACE:
+            return {
+                ...state,
+                selectedPlaceIdx: (<ISelectPlace> action).index,
+                selectedArcIdx: -1,
+                selectedTransitionIdx: -1,
+            };
         case ADD_PLACE:
             return {
                 ...state,
@@ -44,7 +54,14 @@ function pNetReducer(state: IPetriNet = INITIAL_STATE, action: IPetriNetAction):
                         ...(<IUpdatePlace> action).place,
                     };    
                 }),
-            };    
+            };
+        case SELECT_TRANSITION:
+            return {
+                ...state,
+                selectedPlaceIdx: -1,
+                selectedArcIdx: -1,
+                selectedTransitionIdx: (<ISelectTransition> action).index,
+            };
         case ADD_TRANSITION:
             return {
                 ...state,
@@ -66,7 +83,14 @@ function pNetReducer(state: IPetriNet = INITIAL_STATE, action: IPetriNetAction):
                         ...(<IUpdateTransition> action).transition,
                     };    
                 }),
-            };    
+            };  
+        case SELECT_ARC:
+            return {
+                ...state,
+                selectedPlaceIdx: -1,
+                selectedArcIdx: (<ISelectArc> action).index,
+                selectedTransitionIdx: -1,
+            };  
         case ADD_ARC:
             return {
                 ...state,

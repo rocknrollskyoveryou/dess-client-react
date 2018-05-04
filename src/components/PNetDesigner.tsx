@@ -19,23 +19,22 @@ import DesignerView from './DesignerView';
 import Places from './Places';
 import Transitions from './Transitions';
 import Arcs from './Arcs';
-import {
-    IAddPlace, IUpdatePlace,
-    IAddTransition, IUpdateTransition,
-    IAddArc, IDrawArc,
-} from '../actions';
+import * as actions from '../actions';
 import ParamsView from './ParamsView';
 import { Divider, Collapse } from 'material-ui';
 
 export interface IProps {
     petriNet: IPetriNet;
     classes: IClasses;
-    onAddPlace: (place: IPlace) => IAddPlace;
-    onUpdatePlace: (place: IPlace) => IUpdatePlace;
-    onAddTransition: (transition: ITransition) => IAddTransition;
-    onUpdateTransition: (transition: ITransition) => IUpdateTransition;
-    onAddArc: (arc: IArc) => IAddArc;
-    onDrawArc: (arcDrawer: IArcDrawer) => IDrawArc;
+    onSelectPlace: (index: number) => actions.ISelectPlace;
+    onAddPlace: (place: IPlace) => actions.IAddPlace;
+    onUpdatePlace: (place: IPlace) => actions.IUpdatePlace;
+    onSelectTransition: (index: number) => actions.ISelectTransition;
+    onAddTransition: (transition: ITransition) => actions.IAddTransition;
+    onUpdateTransition: (transition: ITransition) => actions.IUpdateTransition;
+    onSelectArc: (index: number) => actions.ISelectArc;
+    onAddArc: (arc: IArc) => actions.IAddArc;
+    onDrawArc: (arcDrawer: IArcDrawer) => actions.IDrawArc;
 }
 
 class PNetDesigner extends React.Component<IProps> {
@@ -43,8 +42,9 @@ class PNetDesigner extends React.Component<IProps> {
     public render(): JSX.Element {
         const {
             petriNet,
-            onUpdatePlace, onUpdateTransition,
-            onAddArc,
+            onSelectPlace, onUpdatePlace, 
+            onSelectTransition, onUpdateTransition,
+            onSelectArc, onAddArc,
             onDrawArc,
             classes
         } = this.props;
@@ -84,6 +84,12 @@ class PNetDesigner extends React.Component<IProps> {
                                         </ListItemIcon>
                                         <ListItemText inset={true} primary="New Petri Object" />
                                     </ListItem>
+                                    <ListItem button={true} style={{ paddingLeft: 32 }}>
+                                        <ListItemIcon>
+                                            <Icon>settings</Icon>
+                                        </ListItemIcon>
+                                        <ListItemText inset={true} primary="Petri Object 1" />
+                                    </ListItem>
                                 </List>
                             </Collapse>
                         </List>
@@ -104,15 +110,26 @@ class PNetDesigner extends React.Component<IProps> {
                     <DesignerView
                         onUpdatePlace={onUpdatePlace}
                         onUpdateTransition={onUpdateTransition}
+                        onSelectPlace={onSelectPlace}
+                        onSelectTransition={onSelectTransition}
                         onAddArc={onAddArc}
                         onDrawArc={onDrawArc}
                         arcDrawer={petriNet.arcDrawer}
                     >
-                        <Places data={petriNet.places} />
-                        <Transitions data={petriNet.transitions} />
-                        <Arcs data={petriNet} />
+                        <Places
+                            places={petriNet.places}
+                            selectedIdx={petriNet.selectedPlaceIdx}
+                        />
+                        <Transitions
+                            transitions={petriNet.transitions}
+                            selectedIdx={petriNet.selectedTransitionIdx}
+                        />
+                        <Arcs
+                            petriNet={petriNet}
+                            onSelect={onSelectArc}
+                        />
                     </DesignerView> 
-                    <ParamsView transition={petriNet.transitions[1]} />  
+                    <ParamsView transition={petriNet.transitions[1]} />
                 </main>
             </div>
         );

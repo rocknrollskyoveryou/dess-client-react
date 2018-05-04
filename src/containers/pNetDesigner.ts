@@ -11,7 +11,8 @@ import PNetDesigner, { IProps } from '../components/PNetDesigner';
 
 // Redux actions
 import {
-  IPetriNetAction, addPlace, updatePlace, addTransition, updateTransition, drawArc, addArc,
+  IPetriNetAction,
+  addPlace, updatePlace, addTransition, updateTransition, drawArc, addArc, selectPlace, selectTransition,
 } from '../actions';
 
 const mapStateToProps = ({ petriNet }: IStoreState) => {
@@ -22,8 +23,10 @@ const mapStateToProps = ({ petriNet }: IStoreState) => {
 
 const mapDispathToProps = (dispatch: Dispatch<IPetriNetAction>) => {
   return {
+    onSelectPlace: (index: number) => dispatch(selectPlace(index)),
     onAddPlace: (place: IPlace) => dispatch(addPlace(place)),
     onUpdatePlace: (place: IPlace) => dispatch(updatePlace(place)),
+    onSelectTransition: (index: number) => dispatch(selectTransition(index)),
     onAddTransition: (transition: ITransition) => dispatch(addTransition(transition)),
     onUpdateTransition: (transition: ITransition) => dispatch(updateTransition(transition)),
     onAddArc: (arc: IArc) => dispatch(addArc(arc)),
