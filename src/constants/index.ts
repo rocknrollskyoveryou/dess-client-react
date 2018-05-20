@@ -1,22 +1,16 @@
-import { IPetriNet } from '../types/petriNet';
+import { IPetriNet, ITransitionParams, IPlaceParams } from '../types/petriNet';
 
-export const SELECT_PLACE = 'SELECT_PLACE';
-export type SELECT_PLACE = typeof SELECT_PLACE;
+export const SELECT_ELEMENT = 'SELECT_ELEMENT';
+export type SELECT_ELEMENT = typeof SELECT_ELEMENT;
 
-export const ADD_PLACE = 'ADD_PLACE';
-export type ADD_PLACE = typeof ADD_PLACE;
+export const RELEASE_ELEMENT = 'RELEASE_ELEMENT';
+export type RELEASE_ELEMENT = typeof RELEASE_ELEMENT;
 
-export const UPDATE_PLACE = 'UPDATE_PLACE';
-export type UPDATE_PLACE = typeof UPDATE_PLACE;
+export const ADD_ELEMENT = 'ADD_ELEMENT';
+export type ADD_ELEMENT = typeof ADD_ELEMENT;
 
-export const SELECT_TRANSITION = 'SELECT_TRANSITION';
-export type SELECT_TRANSITION = typeof SELECT_TRANSITION;
-
-export const ADD_TRANSITION = 'ADD_TRANSITION';
-export type ADD_TRANSITION = typeof ADD_TRANSITION;
-
-export const UPDATE_TRANSITION = 'UPDATE_TRANSITION';
-export type UPDATE_TRANSITION = typeof UPDATE_TRANSITION;
+export const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
+export type UPDATE_ELEMENT = typeof UPDATE_ELEMENT;
 
 export const SELECT_ARC = 'SELECT_ARC';
 export type SELECT_ARC = typeof SELECT_ARC;
@@ -27,60 +21,91 @@ export type ADD_ARC = typeof ADD_ARC;
 export const DRAW_ARC = 'DRAW_ARC';
 export type DRAW_ARC = typeof DRAW_ARC;
 
+export const UI_PLACE_RADIUS = 36;
+export const UI_TRANS_WIDTH = 18;
+export const UI_TRANS_HEIGHT = 72;
+export const UI_ELEMENT_FILL = '#fff';
+export const UI_ELEMENT_STROKE = '#757575';
+export const UI_SELECTED_ELEMENT_FILL = '#9FA8DA';
+export const UI_SELECTED_ELEMENT_STROKE = '#3F51B5';
+
 export const PRELOADED_STATE = {
-    petriNet: {
-        places: [
-            {
-                id: 'place-1',
-                mark: 1,
-                label: 'Place 1',
-                x: 100,
-                y: 200,
-                width: 72,
-                height: 72,
-                isPublic: false,
-                isImportant: false,
-            },
-        ],
-        transitions: [
-            {
-                id: 'transition-1',
-                label: 'Transition 1',
-                x: 400,
-                y: 300,
-                width: 18,
-                height: 72,
-                priority: 1,
-                param: 2,
-                paramDeviation: 1,
-                distribution: 'exp',
-                isPublic: false,
-                isImportant: false,
-            },
-            {
-                id: 'transition-2',
-                label: 'Transition 2',
-                x: 400,
-                y: 100,
-                width: 18,
-                height: 72,
-                priority: 2,
-                param: 5,
-                paramDeviation: 2,
-                distribution: 'exp',
-                isPublic: false,
-                isImportant: false,
-            },
-        ],
-        arcs: [
-            {
-                source: 'place-1',
-                target: 'transition-1',
-                isIncoming: true,
-            },
-        ],
-        selectedPlaceIdx: -1,
-        selectedTransitionIdx: -1,
-        selectedArcIdx: -1,
+  petriNet: {
+    id: '',
+    name: 'New Petri Net',
+    elements: [
+      {
+        id: 'place-1',
+        type: 0,
+        params: <IPlaceParams> {
+          label: 'Place 1',
+          mark: 1,
+        },
+        ui: {
+          x: 100,
+          y: 200,
+        },
+        isPublic: false,
+        isImportant: false,
+      },
+      {
+        id: 'place-1',
+        type: 0,
+        params: <IPlaceParams> {
+          label: 'Place 2',
+          mark: 1,
+        },
+        ui: {
+          x: 100,
+          y: 200,
+        },
+        isPublic: false,
+        isImportant: false,
+      },
+      {
+        id: 'transition-1',
+        type: 1,
+        params: <ITransitionParams> {
+          label: 'Transition 1',
+          priority: 1,
+          param: 2,
+          paramDeviation: 1,
+          distribution: 'exp',
+        },
+        ui: {
+          x: 400,
+          y: 300,
+        },
+        isPublic: false,
+        isImportant: false,
+      },
+      {
+        id: 'transition-2',
+        type: 1,
+        params: <ITransitionParams> {
+          label: 'Transition 2',
+          priority: 2,
+          param: 5,
+          paramDeviation: 2,
+          distribution: 'exp',
+        },
+        ui: {
+          x: 400,
+          y: 100,
+        },
+        isPublic: false,
+        isImportant: false,
+      },
+    ],
+    arcs: [
+      {
+        source: 'place-1',
+        target: 'transition-1',
+      },
+    ],
+    ui: {
+      selectedElementIdx: -1,
+      selectedArcIdx: -1,
     },
+  },
 };

@@ -1,34 +1,23 @@
 import * as constants from '../constants';
-import { IPlace, ITransition, IArc, IArcDrawer } from '../types/petriNet';
+import { IPetriNetElement, IArc, IArcDrawer } from '../types/petriNet';
 
-export interface ISelectPlace {
-    type: constants.SELECT_PLACE;
+export interface ISelectElement {
+    type: constants.SELECT_ELEMENT;
     index: number;
 }
 
-export interface IAddPlace {
-    type: constants.ADD_PLACE;
-    place: IPlace;
+export interface IReleaseElement {
+    type: constants.RELEASE_ELEMENT;
 }
 
-export interface IUpdatePlace {
-    type: constants.UPDATE_PLACE;
-    place: IPlace;
+export interface IAddElement {
+    type: constants.ADD_ELEMENT;
+    element: IPetriNetElement;
 }
 
-export interface ISelectTransition {
-    type: constants.SELECT_TRANSITION;
-    index: number;
-}
-
-export interface IAddTransition {
-    type: constants.ADD_TRANSITION;
-    transition: ITransition;
-}
-
-export interface IUpdateTransition {
-    type: constants.UPDATE_TRANSITION;
-    transition: ITransition;
+export interface IUpdateElement {
+    type: constants.UPDATE_ELEMENT;
+    element: IPetriNetElement;
 }
 
 export interface ISelectArc {
@@ -43,60 +32,44 @@ export interface IAddArc {
 
 export interface IDrawArc {
     type: constants.DRAW_ARC;
-    arcDrawer: IArcDrawer;
+    arcDrawer: IArcDrawer | undefined;
 }
 
-export type IPetriNetAddAction = IAddPlace |
-                                 IAddTransition |
+export type IPetriNetAddAction = IAddElement |
                                  IAddArc |
                                  IDrawArc |
-                                 ISelectPlace |
-                                 ISelectTransition |
+                                 ISelectElement |
+                                 IReleaseElement |
                                  ISelectArc;
 
-export type IPetriNetUpdateAction = IUpdatePlace | IUpdateTransition;
+export type IPetriNetUpdateAction = IUpdateElement | IUpdateElement;
 
 export type IPetriNetAction = IPetriNetAddAction | IPetriNetUpdateAction;
 
-export function selectPlace(index: number): ISelectPlace {
+export function selectElement(index: number): ISelectElement {
     return {
-        type: constants.SELECT_PLACE,
+        type: constants.SELECT_ELEMENT,
         index,
     };
 }
 
-export function addPlace(place: IPlace): IAddPlace {
+export function releaseElement(): IReleaseElement {
     return {
-        type: constants.ADD_PLACE,
-        place,
+        type: constants.RELEASE_ELEMENT,
     };
 }
 
-export function updatePlace(place: IPlace): IUpdatePlace {
+export function addElement(element: IPetriNetElement): IAddElement {
     return {
-        type: constants.UPDATE_PLACE,
-        place,
+        type: constants.ADD_ELEMENT,
+        element,
     };
 }
 
-export function selectTransition(index: number): ISelectTransition {
+export function updateElement(element: IPetriNetElement): IUpdateElement {
     return {
-        type: constants.SELECT_TRANSITION,
-        index,
-    };
-}
-
-export function addTransition(transition: ITransition): IAddTransition {
-    return {
-        type: constants.ADD_TRANSITION,
-        transition,
-    };
-}
-
-export function updateTransition(transition: ITransition): IUpdateTransition {
-    return {
-        type: constants.UPDATE_TRANSITION,
-        transition,
+        type: constants.UPDATE_ELEMENT,
+        element,
     };
 }
 
@@ -114,7 +87,7 @@ export function addArc(arc: IArc): IAddArc {
     };
 }
 
-export function drawArc(arcDrawer: IArcDrawer): IDrawArc {
+export function drawArc(arcDrawer: IArcDrawer | undefined): IDrawArc {
     return {
         type: constants.DRAW_ARC,
         arcDrawer,

@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, Middleware } from 'redux';
 
-import { UPDATE_PLACE, UPDATE_TRANSITION } from '../constants';
+import { UPDATE_ELEMENT } from '../constants';
 
 import { IStoreState } from '../types';
 
@@ -12,7 +12,7 @@ import rootReducer from '../reducers';
 
 // Create the redux logging middleware
 const loggerMiddleware = createLogger({
-  predicate: (getState, action) => (action.type !== UPDATE_PLACE && action.type !== UPDATE_TRANSITION),
+  predicate: (getState, action) => (action.type !== UPDATE_ELEMENT),
 });
 
 // Configuring the Store. PreloadState is the initial State.

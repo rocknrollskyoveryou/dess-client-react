@@ -1,51 +1,85 @@
-export interface IPlace {
-  id: string;
-  mark: number;
+export interface IElementParams {
   label: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
   isPublic: boolean;
   isImportant: boolean;
 }
 
-export interface ITransition {
-  id: string;
-  label: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+export interface IPlaceParams extends IElementParams {
+  mark: number;
+}
+
+export interface ITransitionParams extends IElementParams {
   priority: number;
   param: number;
   paramDeviation?: number;
   distribution: string;
-  isPublic: boolean;
-  isImportant: boolean;
+}
+
+export interface IArcParams {
+  quantity: number;
+  isInfo: boolean;
+}
+
+export interface IModelParams {
+  simulationTime: number;
+}
+
+export enum PetriNetElementType { Place, Transition }
+
+export interface IPetriNetElement {
+  id: string;
+  type: PetriNetElementType;
+  ui: {
+    x: number;
+    y: number;
+  };
+  params?: ITransitionParams | IPlaceParams;
 }
 
 export interface IArc {
   source: string;
   target: string;
-  isIncoming: boolean;
+  params?: IArcParams;
 }
 
-interface IArcCreator {
+export interface IArcDrawer {
   source: string;
   mouseX: number;
   mouseY: number;
-  isIncoming: boolean;
 }
 
-export type IArcDrawer = IArcCreator | undefined;
-
 export interface IPetriNet {
-  places: Array<IPlace>;
-  transitions: Array<ITransition>;
+  id: string;
+  name: string;
+  elements: Array<IPetriNetElement>;
   arcs: Array<IArc>;
-  arcDrawer?: IArcDrawer;
-  selectedPlaceIdx: number;
-  selectedTransitionIdx: number;
-  selectedArcIdx: number;
+  ui: {
+    arcDrawer?: IArcDrawer;
+    selectedElementIdx: number;
+    selectedArcIdx: number;
+  };
+}
+
+export interface IPetriObject {
+  id: string;
+  name: string;
+  petriNetId: number;
+  params?: Array<IPetriNetElement>;
+}
+
+export interface IModel {
+  id: string;
+  name: string;
+  petriObjects: Array<IPetriObject>;
+  params?: IModelParams;
+}
+
+export interface IResourceViewModel {
+  id: string;
+  name: string;
+}
+
+export interface IResourceViewPetriNet {
+  id: string;
+  name: string;
 }

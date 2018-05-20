@@ -4,16 +4,13 @@ import { Dispatch } from 'redux';
 
 // Types
 import { IStoreState } from '../types';
-import { IPlace, ITransition, IArcDrawer, IArc } from '../types/petriNet';
+import { IPetriNetElement, IArcDrawer, IArc } from '../types/petriNet';
 
 // Dumb component
 import PNetDesigner, { IProps } from '../components/PNetDesigner';
 
 // Redux actions
-import {
-  IPetriNetAction,
-  addPlace, updatePlace, addTransition, updateTransition, drawArc, addArc, selectPlace, selectTransition,
-} from '../actions';
+import * as actions from '../actions';
 
 const mapStateToProps = ({ petriNet }: IStoreState) => {
   return {
@@ -21,16 +18,15 @@ const mapStateToProps = ({ petriNet }: IStoreState) => {
   };
 };
 
-const mapDispathToProps = (dispatch: Dispatch<IPetriNetAction>) => {
+const mapDispathToProps = (dispatch: Dispatch<actions.IPetriNetAction>) => {
   return {
-    onSelectPlace: (index: number) => dispatch(selectPlace(index)),
-    onAddPlace: (place: IPlace) => dispatch(addPlace(place)),
-    onUpdatePlace: (place: IPlace) => dispatch(updatePlace(place)),
-    onSelectTransition: (index: number) => dispatch(selectTransition(index)),
-    onAddTransition: (transition: ITransition) => dispatch(addTransition(transition)),
-    onUpdateTransition: (transition: ITransition) => dispatch(updateTransition(transition)),
-    onAddArc: (arc: IArc) => dispatch(addArc(arc)),
-    onDrawArc: (arcDrawer: IArcDrawer) => dispatch(drawArc(arcDrawer)),
+    onSelectElement: (index: number) => dispatch(actions.selectElement(index)),
+    onReleaseElement: () => dispatch(actions.releaseElement()),
+    onAddElement: (element: IPetriNetElement) => dispatch(actions.addElement(element)),
+    onUpdateElement: (element: IPetriNetElement) => dispatch(actions.updateElement(element)),
+    onAddArc: (arc: IArc) => dispatch(actions.addArc(arc)),
+    onSelectArc: (index: number) => dispatch(actions.selectArc(index)),
+    onDrawArc: (arcDrawer: IArcDrawer | undefined) => dispatch(actions.drawArc(arcDrawer)),
   };
 };
 

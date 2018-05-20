@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 
-import { withStyles, Theme, StyleRules, WithStyles } from 'material-ui/styles';
+import { withStyles, Theme, StyleRules, WithStyles } from '@material-ui/core/styles';
 import { IClasses } from '../types';
 import { compose } from 'redux';
-import { IPlace, ITransition, IArcDrawer, IArc } from '../types/petriNet';
+import { IPetriNetElement, IArcDrawer, IArc } from '../types/petriNet';
 import {
-    IAddPlace, IUpdatePlace,
-    IAddTransition, IUpdateTransition,
-    IDrawArc, IPetriNetUpdateAction, IAddArc, ISelectPlace, ISelectTransition
+    ISelectElement, IAddElement, IUpdateElement,
+    IDrawArc, IPetriNetUpdateAction, IAddArc, IReleaseElement, 
 } from '../actions';
 
 interface IDefaultProps {
@@ -23,14 +22,12 @@ interface IProps {
     gridSpacing?: number;
     gridDot?: number;
     arcDrawer?: IArcDrawer;
-    onSelectPlace?: (index: number) => ISelectPlace;
-    onAddPlace?: (place: IPlace) => IAddPlace;
-    onUpdatePlace?: (place: IPlace) => IUpdatePlace;
-    onSelectTransition?: (index: number) => ISelectTransition;
-    onAddTransition?: (transition: ITransition) => IAddTransition;
-    onUpdateTransition?: (transition: ITransition) => IUpdateTransition;
+    onSelectElement?: (index: number) => ISelectElement;
+    onReleaseElement?: () => IReleaseElement;
+    onAddElement?: (element: IPetriNetElement) => IAddElement;
+    onUpdateElement?: (element: IPetriNetElement) => IUpdateElement;
     onAddArc?: (arc: IArc) => IAddArc;
-    onDrawArc?: (arcDrawer: IArcDrawer) => IDrawArc;
+    onDrawArc?: (arcDrawer: IArcDrawer | undefined) => IDrawArc;
 }
 
 class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> {
@@ -48,39 +45,25 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
 
     public componentDidMount(): void {
 
-        d3.selectAll('.place')
-            .on('mousedown', onPlaceMouseDown)
+        d3.selectAll('.element')
+            .on('mousedown', onElementMouseDown)
             .on('mouseup', this.addArc)
             .call(d3.drag()
             .filter(() => this.props.arcDrawer === undefined)
-            .on('drag', this.onPlaceDrag));
-
-        d3.selectAll('.transition')
-            .on('mousedown', onTransitionMouseDown)
-            .on('mouseup', this.addArc)
-            .call(d3.drag()
-            .filter(() => this.props.arcDrawer === undefined)
-            .on('drag', this.onTransitionDrag));
+            .on('drag', this.onElementDrag));
 
         d3.select(this.view)
             .on('mousemove', this.onViewMouseMove)
+            .on('mousedown', this.onViewMouseDown)
             .on('mouseup', this.onViewMouseUp);
 
-        const { onSelectPlace, onSelectTransition, onDrawArc } = this.props;
+        const { onSelectElement, onDrawArc } = this.props;
 
-        function onPlaceMouseDown(d: IPlace): void {
+        function onElementMouseDown(d: IPetriNetElement): void {
             if (onDrawArc && d3.event.shiftKey) {
-                onDrawArc({ source: d.id, mouseX: d.x, mouseY: d.y, isIncoming: true });
-            } else if (onSelectPlace) {
-                onSelectPlace(+this.dataset.index);
-            }
-        }
-
-        function onTransitionMouseDown(d: ITransition): void {
-            if (onDrawArc && d3.event.shiftKey) {
-                onDrawArc({ source: d.id, mouseX: d3.event.x, mouseY: d3.event.y, isIncoming: false });
-            } else if (onSelectTransition) {
-                onSelectTransition(+this.dataset.index);
+                onDrawArc({ source: d.id, mouseX: d.ui.x, mouseY: d.ui.y });
+            } else if (onSelectElement) {
+                onSelectElement(+this.dataset.index);
             }
         }
     }
@@ -168,19 +151,18 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         );
     }
 
-    private drawArc = (arc: IArcDrawer) => {
+    private drawArc = (arc: IArcDrawer | undefined) => {
         if (this.props.onDrawArc) {
             this.props.onDrawArc(arc);
         }
     }
 
-    private addArc = (target: IPlace | ITransition): void => {
+    private addArc = (target: IPetriNetElement): void => {
         const { arcDrawer, onAddArc } = this.props;
         if (arcDrawer) {
             const arc = {
                 source: arcDrawer.source,
                 target: target.id,
-                isIncoming: arcDrawer.isIncoming,
             };
             if (onAddArc) {
                 onAddArc(arc);
@@ -188,11 +170,11 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         }
     }
 
-    private moveElement = (el: IPlace | ITransition,
-                           callback: (el: IPlace | ITransition) => IPetriNetUpdateAction) => {
+    private moveElement = (el: IPetriNetElement,
+                           callback: (el: IPetriNetElement) => IPetriNetUpdateAction) => {
         if (!d3.event.shiftKey) {
-            el.x += d3.event.dx;
-            el.y += d3.event.dy;
+            el.ui.x += d3.event.dx;
+            el.ui.y += d3.event.dy;
             callback(el);
         }
     }
@@ -213,28 +195,25 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         }
     }
 
-    private onViewMouseUp = (d: any) => {
+    private onViewMouseUp = () => {
         if (this.props.arcDrawer) {
             this.drawArc(undefined);
         }
     }
 
-    // Place event listeners
-
-    private onPlaceDrag = (d: IPlace): void => {
-        if (this.props.onUpdatePlace) {
-            this.moveElement(d, this.props.onUpdatePlace);
+    private onViewMouseDown = () => {
+        if (this.props.onReleaseElement) {
+            this.props.onReleaseElement();
         }
     }
 
-    // Transition event listeners
+    // Element event listeners
 
-    private onTransitionDrag = (d: ITransition): void => {
-        if (this.props.onUpdateTransition) {
-            this.moveElement(d, this.props.onUpdateTransition);
+    private onElementDrag = (d: IPetriNetElement): void => {
+        if (this.props.onUpdateElement) {
+            this.moveElement(d, this.props.onUpdateElement);
         }
     }
-
 }
 
 const styles = (theme: Theme): StyleRules => ({
