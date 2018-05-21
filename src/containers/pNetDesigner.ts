@@ -7,7 +7,7 @@ import { IStoreState } from '../types';
 import { IPetriNetElement, IArcDrawer, IArc } from '../types/petriNet';
 
 // Dumb component
-import PNetDesigner, { IProps } from '../components/PNetDesigner';
+import PNetDesigner from '../components/PNetDesigner';
 
 // Redux actions
 import * as actions from '../actions';
@@ -30,4 +30,4 @@ const mapDispathToProps = (dispatch: Dispatch<actions.IPetriNetAction>) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispathToProps)<IProps>(PNetDesigner);
+export default connect(mapStateToProps, mapDispathToProps)(PNetDesigner);

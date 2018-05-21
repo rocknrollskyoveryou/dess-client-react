@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { IPetriNetElement, IArcDrawer, IArc } from '../types/petriNet';
 import {
     ISelectElement, IAddElement, IUpdateElement,
-    IDrawArc, IPetriNetUpdateAction, IAddArc, IReleaseElement, 
+    IDrawArc, IPetriNetUpdateAction, IAddArc, IReleaseElement, ISelectArc, 
 } from '../actions';
 
 interface IDefaultProps {
@@ -28,6 +28,7 @@ interface IProps {
     onUpdateElement?: (element: IPetriNetElement) => IUpdateElement;
     onAddArc?: (arc: IArc) => IAddArc;
     onDrawArc?: (arcDrawer: IArcDrawer | undefined) => IDrawArc;
+    onSelectArc?: (index: number) => ISelectArc;
 }
 
 class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> {
@@ -44,29 +45,13 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
     private entities: SVGGElement;
 
     public componentDidMount(): void {
-
-        d3.selectAll('.element')
-            .on('mousedown', onElementMouseDown)
-            .on('mouseup', this.addArc)
-            .call(d3.drag()
-            .filter(() => this.props.arcDrawer === undefined)
-            .on('drag', this.onElementDrag));
-
-        d3.select(this.view)
-            .on('mousemove', this.onViewMouseMove)
-            .on('mousedown', this.onViewMouseDown)
-            .on('mouseup', this.onViewMouseUp);
-
-        const { onSelectElement, onDrawArc } = this.props;
-
-        function onElementMouseDown(d: IPetriNetElement): void {
-            if (onDrawArc && d3.event.shiftKey) {
-                onDrawArc({ source: d.id, mouseX: d.ui.x, mouseY: d.ui.y });
-            } else if (onSelectElement) {
-                onSelectElement(+this.dataset.index);
-            }
-        }
+        this.setEventListeners();
     }
+
+    // public componentDidUpdate(): void {
+    //     const { elements }
+    //     this.setEventListeners();
+    // }
 
     public render(): JSX.Element {
         const { classes, children } = this.props;
@@ -84,6 +69,42 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
                 </svg>
             </div>
         );
+    }
+
+    private setEventListeners() {
+        d3.selectAll('.element')
+            .on('mousedown', onElementMouseDown)
+            .on('mouseup', this.addArc)
+            .call(d3.drag()
+                .filter(() => this.props.arcDrawer === undefined)
+                .on('drag', this.onElementDrag));
+
+        d3.selectAll('.arc')
+            .on('mousedown', onArcMouseDown);
+
+        const zoom = d3.zoom()
+                    .scaleExtent([0.7, 1.3])
+                    .on('zoom', this.handleZoom);
+
+        d3.select(this.view)
+            .on('mousemove', this.onViewTouchMove)
+            .on('mousedown', this.onViewMouseDown)
+            .on('mouseup', this.onViewMouseUp)
+            .call(zoom);
+
+        const { onSelectElement, onSelectArc, onDrawArc } = this.props;
+        function onElementMouseDown(d: IPetriNetElement): void {
+            if (onDrawArc && d3.event.shiftKey) {
+                onDrawArc({ source: d, mouseX: d.ui.x, mouseY: d.ui.y });
+            } else if (onSelectElement) {
+                onSelectElement(+this.dataset.index);
+            }
+        }
+        function onArcMouseDown(d: IPetriNetElement): void {
+            if (onSelectArc) {
+                onSelectArc(+this.dataset.index);
+            }
+        }
     }
 
     private renderBackground(): JSX.Element {
@@ -161,10 +182,10 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
         const { arcDrawer, onAddArc } = this.props;
         if (arcDrawer) {
             const arc = {
-                source: arcDrawer.source,
+                source: arcDrawer.source.id,
                 target: target.id,
             };
-            if (onAddArc) {
+            if (onAddArc && arcDrawer.source.type !== target.type) {
                 onAddArc(arc);
             }
         }
@@ -181,8 +202,9 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
 
     // View event listeners
     
-    private onViewMouseMove = () => {
+    private onViewTouchMove = () => {
         d3.event.preventDefault();
+        d3.event.stopPropagation();
         const { arcDrawer } = this.props;
         if (arcDrawer) {
             this.drawArc({
@@ -190,9 +212,13 @@ class DesignerView extends React.Component<IProps & WithStyles<'root' | 'svg'>> 
                 mouseX: d3.event.offsetX,
                 mouseY: d3.event.offsetY,
             });
-        } else {
-            return;
         }
+        return;
+    }
+
+    private handleZoom = () => {
+        // if (this.props.arcDrawer) { return; }
+        d3.select(this.entities).attr('transform', d3.event.transform);
     }
 
     private onViewMouseUp = () => {

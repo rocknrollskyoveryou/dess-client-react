@@ -18,6 +18,7 @@ import DesignerView from './DesignerView';
 import Elements from './Elements';
 import Arcs from './Arcs';
 import ParamsView from './ParamsView';
+import ResourceView from './ResourceView';
 
 const styles = (theme: Theme): StyleRules => ({
   root: {
@@ -35,11 +36,12 @@ const styles = (theme: Theme): StyleRules => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     minWidth: 0, // So the Typography noWrap works
+    marginTop: 64,
   },
   toolbar: theme.mixins.toolbar,
 });
 
-export interface IProps {
+interface IProps {
   petriNet: IPetriNet;
   onReleaseElement: () => actions.IReleaseElement;
   onSelectElement: (index: number) => actions.ISelectElement;
@@ -67,21 +69,22 @@ class PNetDesigner extends React.Component<PropsWithStyles> {
 
     return (
       <div className={classes.root}>
-        <AppBar position="absolute" className={classes.appBar}>
+        <AppBar className={classes.appBar}>
           <Toolbar>
             <Typography variant="title" color="inherit" noWrap={true}>
               DESS
             </Typography>
           </Toolbar>
         </AppBar>
-
+        <ResourceView />
         <main className={classes.content}>
-          <div className={classes.toolbar} />
+          {/* <div className={classes.toolbar} /> */}
           <DesignerView
             onReleaseElement={petriNet.ui.selectedElementIdx !== -1 ? onReleaseElement : undefined}
             onSelectElement={onSelectElement}
             onUpdateElement={onUpdateElement}
             onAddArc={onAddArc}
+            onSelectArc={onSelectArc}
             onDrawArc={onDrawArc}
             arcDrawer={petriNet.ui.arcDrawer}
           >
@@ -89,10 +92,10 @@ class PNetDesigner extends React.Component<PropsWithStyles> {
               elements={petriNet.elements}
               selectedIdx={petriNet.ui.selectedElementIdx}
             />
-            {/* <Arcs
+            <Arcs
               petriNet={petriNet}
               onSelect={onSelectArc}
-            /> */}
+            />
           </DesignerView>
           {selectedElement && <ParamsView element={selectedElement} />}
         </main>

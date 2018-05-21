@@ -7,7 +7,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
-import Icon from '@material-ui/core/icon';
+import Icon from '@material-ui/core/Icon';
 import { withStyles, WithStyles, Theme, StyleRules } from '@material-ui/core/styles';
 
 import { IResourceViewModel, IResourceViewPetriNet } from '../types/petriNet';
@@ -47,13 +47,8 @@ const ResourceView: React.SFC<PropsWithStyles> = ({
           <ListItemIcon>
             <Icon>settings</Icon>
           </ListItemIcon>
-          <ListItemText inset={true} primary="New Petri Object" />
-        </ListItem>
-        <ListItem button={true}>
-          <ListItemIcon>
-            <Icon>settings</Icon>
-          </ListItemIcon>
-          <ListItemText inset={true} primary="Petri Object 1" />
+          {/* <ListItemText inset={true} primary="Crossroad" /> */}
+          <ListItemText inset={true} primary="New Model" />
         </ListItem>
       </List>
 
@@ -66,9 +61,12 @@ const ResourceView: React.SFC<PropsWithStyles> = ({
           <ListItemIcon>
             <Icon>share</Icon>
           </ListItemIcon>
+          {/* <ListItemText primary="Traffic lights" /> */}
           <ListItemText primary="New Petri Net" />
         </ListItem>
       </List>
     </Drawer>
   );
 };
+
+export default withStyles(style)(ResourceView);

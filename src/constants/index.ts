@@ -48,20 +48,20 @@ export const PRELOADED_STATE = {
         isPublic: false,
         isImportant: false,
       },
-      {
-        id: 'place-1',
-        type: 0,
-        params: <IPlaceParams> {
-          label: 'Place 2',
-          mark: 1,
-        },
-        ui: {
-          x: 100,
-          y: 200,
-        },
-        isPublic: false,
-        isImportant: false,
-      },
+      // {
+      //   id: 'place-1',
+      //   type: 0,
+      //   params: <IPlaceParams> {
+      //     label: 'Place 2',
+      //     mark: 1,
+      //   },
+      //   ui: {
+      //     x: 100,
+      //     y: 200,
+      //   },
+      //   isPublic: false,
+      //   isImportant: false,
+      // },
       {
         id: 'transition-1',
         type: 1,
@@ -79,29 +79,29 @@ export const PRELOADED_STATE = {
         isPublic: false,
         isImportant: false,
       },
-      {
-        id: 'transition-2',
-        type: 1,
-        params: <ITransitionParams> {
-          label: 'Transition 2',
-          priority: 2,
-          param: 5,
-          paramDeviation: 2,
-          distribution: 'exp',
-        },
-        ui: {
-          x: 400,
-          y: 100,
-        },
-        isPublic: false,
-        isImportant: false,
-      },
+      // {
+      //   id: 'transition-2',
+      //   type: 1,
+      //   params: <ITransitionParams> {
+      //     label: 'Transition 2',
+      //     priority: 2,
+      //     param: 5,
+      //     paramDeviation: 2,
+      //     distribution: 'exp',
+      //   },
+      //   ui: {
+      //     x: 400,
+      //     y: 100,
+      //   },
+      //   isPublic: false,
+      //   isImportant: false,
+      // },
     ],
     arcs: [
-      {
-        source: 'place-1',
-        target: 'transition-1',
-      },
+      // {
+      //   source: 'place-1',
+      //   target: 'transition-1',
+      // },
     ],
     ui: {
       selectedElementIdx: -1,

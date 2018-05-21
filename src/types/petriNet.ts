@@ -43,7 +43,7 @@ export interface IArc {
 }
 
 export interface IArcDrawer {
-  source: string;
+  source: IPetriNetElement;
   mouseX: number;
   mouseY: number;
 }
